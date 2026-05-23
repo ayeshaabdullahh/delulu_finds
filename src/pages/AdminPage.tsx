@@ -10,7 +10,7 @@ import QuickActions from '../components/admin/QuickActions';
 import ProductTable from '../components/admin/ProductTable';
 import ProductFormModal, { ProductForm, emptyForm } from '../components/admin/ProductForm';
 
-const ADMIN_PASSWORD = 'delulu2025';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
 type Tab = 'overview' | 'products' | 'add';
 
