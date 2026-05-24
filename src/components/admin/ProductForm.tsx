@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Image, Link as LinkIcon, Upload } from 'lucide-react';
+import { X, Image, Link as LinkIcon } from 'lucide-react';
 import { Product, supabase } from '../../lib/supabase';
 
 const categories = ['Tops', 'Dresses', 'Sets', 'Knitwear', 'Bottoms', 'Outerwear', 'Accessories'];
@@ -9,25 +9,6 @@ const tagOptions = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
-
-// Cloudinary upload function
-const uploadImageToCloudinary = async (file: File): Promise<string> => {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', uploadPreset);
-
-  const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-    { method: 'POST', body: formData }
-  );
-
-  const data = await response.json();
-  if (!data.secure_url) throw new Error('Upload failed');
-  return data.secure_url;
-};
 
 export interface ProductForm {
   name: string;
@@ -60,7 +41,6 @@ interface ProductFormModalProps {
 
 export default function ProductFormModal({ editing, form, setForm, onClose, onSaved }: ProductFormModalProps) {
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   const handleNameChange = (name: string) => {
@@ -74,22 +54,6 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
         ? f.aesthetic_tags.filter((t) => t !== tag)
         : [...f.aesthetic_tags, tag],
     }));
-  };
-
-  // Cloudinary image upload handler
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setError('');
-    try {
-      const url = await uploadImageToCloudinary(file);
-      setForm((f) => ({ ...f, image_url: url }));
-    } catch (err: any) {
-      setError('Image upload failed. Try again.');
-    } finally {
-      setUploading(false);
-    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -137,44 +101,15 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
             <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Description</label>
             <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all resize-none" placeholder="Describe this find..." />
           </div>
-
-          {/* IMAGE UPLOAD - Cloudinary */}
           <div>
             <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">
-              <Image size={10} className="inline mr-1" /> Product Image *
+              <Image size={10} className="inline mr-1" /> Image URL *
             </label>
-
-            {/* File Upload Button */}
-            <label className={`flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border-2 border-dashed cursor-pointer transition-all
-              ${uploading ? 'border-blush-200/50 bg-blush-50/30' : 'border-blush-100/50 bg-white/60 hover:border-blush-200/70 hover:bg-blush-50/20'}`}>
-              <Upload size={14} className="text-blush-300" />
-              <span className="text-xs font-body text-blush-300">
-                {uploading ? 'Uploading...' : 'Click to upload image'}
-              </span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploading}
-                className="hidden"
-              />
-            </label>
-
-            {/* Manual URL fallback */}
-            <input
-              type="url"
-              value={form.image_url}
-              onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
-              className="w-full mt-2 px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all"
-              placeholder="Or paste image URL manually..."
-            />
-
-            {/* Image Preview */}
+            <input type="url" value={form.image_url} onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="https://..." />
             {form.image_url && (
               <img src={form.image_url} alt="Preview" className="mt-2 w-full h-32 object-cover rounded-xl" />
             )}
           </div>
-
           <div>
             <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">
               <LinkIcon size={10} className="inline mr-1" /> Affiliate URL *
@@ -209,8 +144,14 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
             <label className="text-[10px] tracking-[0.2em] uppercase text-lavender-300 font-bold font-body block mb-2">Aesthetic Tags</label>
             <div className="flex flex-wrap gap-2">
               {tagOptions.map((tag) => (
-                <button key={tag} type="button" onClick={() => toggleTag(tag)}
-                  className={`clay-button-outline !py-1 !px-3 !text-[10px] font-body ${form.aesthetic_tags.includes(tag) ? 'bg-lavender-200/20 border-lavender-200/70 text-lavender-400' : ''}`}>
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  className={`clay-button-outline !py-1 !px-3 !text-[10px] font-body ${
+                    form.aesthetic_tags.includes(tag) ? 'bg-lavender-200/20 border-lavender-200/70 text-lavender-400' : ''
+                  }`}
+                >
                   {tag}
                 </button>
               ))}
@@ -228,7 +169,7 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
           </div>
           {error && <p className="text-red-400 text-xs font-body">{error}</p>}
           <div className="flex gap-3 pt-2">
-            <button type="submit" disabled={saving || uploading} className="clay-button flex-1 text-xs tracking-widest uppercase">
+            <button type="submit" disabled={saving} className="clay-button flex-1 text-xs tracking-widest uppercase">
               {saving ? 'Saving...' : editing ? 'Update Find' : 'Add Find'}
             </button>
             <button type="button" onClick={onClose} className="clay-button-outline flex-1 text-xs tracking-widest uppercase">Cancel</button>
