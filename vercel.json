@@ -1,10 +1,5 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/" },
-    { "source": "/explore", "destination": "/" },
-    { "source": "/product/:slug", "destination": "/" },
-    { "source": "/search", "destination": "/" },
-    { "source": "/saved", "destination": "/" },
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
