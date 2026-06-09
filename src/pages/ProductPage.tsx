@@ -4,13 +4,13 @@ import { ExternalLink, Heart, ArrowLeft, ChevronRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
 
-const sourceClass = (source: string) => {
+const sourceBadgeClass = (source: string) => {
   const s = source.toLowerCase();
-  if (s.includes('amazon')) return 'source-amazon';
-  if (s.includes('etsy')) return 'source-etsy';
-  if (s.includes('daraz')) return 'source-daraz';
-  if (s.includes('shareasale')) return 'source-shareasale';
-  return 'source-amazon';
+  if (s.includes('awin')) return 'source-awn';
+  if (s.includes('impact')) return 'source-imp';
+  if (s.includes('mavrly')) return 'source-mvr';
+  if (s.includes('daraz')) return 'source-drz';
+  return 'source-drz';
 };
 
 export default function ProductPage() {
@@ -76,7 +76,7 @@ export default function ProductPage() {
               alt={product.name}
               className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <span className={`absolute top-4 left-4 source-badge ${sourceClass(product.source)}`}>
+            <span className={`absolute top-4 left-4 source-badge ${sourceBadgeClass(product.source)}`}>
               {product.source}
             </span>
           </div>

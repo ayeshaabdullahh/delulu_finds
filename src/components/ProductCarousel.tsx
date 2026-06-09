@@ -55,13 +55,22 @@ export default function ProductCarousel() {
     setRotation((prev) => prev + (dir === 'next' ? -ANGLE_STEP : ANGLE_STEP));
   };
 
-  const sourceClass = (source: string) => {
+  const sourceBadgeClass = (source: string) => {
     const s = source.toLowerCase();
-    if (s.includes('amazon')) return 'source-amazon';
-    if (s.includes('etsy')) return 'source-etsy';
-    if (s.includes('daraz')) return 'source-daraz';
-    if (s.includes('shareasale')) return 'source-shareasale';
-    return 'source-amazon';
+    if (s.includes('awin')) return 'source-awn';
+    if (s.includes('impact')) return 'source-imp';
+    if (s.includes('mavrly')) return 'source-mvr';
+    if (s.includes('daraz')) return 'source-drz';
+    return 'source-drz';
+  };
+
+  const sourceLabel = (source: string) => {
+    const s = source.toLowerCase();
+    if (s.includes('awin')) return 'AWN';
+    if (s.includes('impact')) return 'IMP';
+    if (s.includes('mavrly')) return 'MVR';
+    if (s.includes('daraz')) return 'DRZ';
+    return source;
   };
 
   if (products.length === 0) return null;
@@ -130,8 +139,8 @@ export default function ProductCarousel() {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           loading="lazy"
                         />
-                        <span className={`absolute top-3 left-3 source-badge ${sourceClass(product.source)}`}>
-                          {product.source}
+                        <span className={`absolute top-3 left-3 source-badge ${sourceBadgeClass(product.source)}`}>
+                          {sourceLabel(product.source)}
                         </span>
                       </div>
                       <div className="p-4 flex flex-col justify-between h-[42%]">

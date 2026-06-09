@@ -200,24 +200,24 @@
     border-radius: 6px;
   }
 
-  .source-amazon {
-    background: rgba(255, 153, 0, 0.12);
-    color: #c77b00;
+  .source-awn {
+    background: #E8B4C8;
+    color: #2A1A1E;
   }
 
-  .source-etsy {
-    background: rgba(240, 100, 64, 0.12);
-    color: #c44d2e;
+  .source-imp {
+    background: #B4C8E8;
+    color: #1A1E2A;
   }
 
-  .source-daraz {
-    background: rgba(240, 48, 88, 0.12);
-    color: #c4203e;
+  .source-mvr {
+    background: #C8E8B4;
+    color: #1E2A1A;
   }
 
-  .source-shareasale {
-    background: rgba(0, 150, 136, 0.12);
-    color: #00796b;
+  .source-drz {
+    background: #E8D4B4;
+    color: #2A221A;
   }
 
   .bottom-nav {

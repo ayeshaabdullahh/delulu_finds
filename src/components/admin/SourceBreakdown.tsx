@@ -5,10 +5,10 @@ interface SourceBreakdownProps {
 }
 
 const sourceConfig: Record<string, { color: string; bg: string }> = {
-  Amazon: { color: 'text-amber-600', bg: 'bg-amber-100' },
-  Etsy: { color: 'text-orange-600', bg: 'bg-orange-100' },
-  Daraz: { color: 'text-rose-600', bg: 'bg-rose-100' },
-  ShareASale: { color: 'text-teal-600', bg: 'bg-teal-100' },
+  AWIN: { color: 'text-[#E8B4C8]', bg: 'bg-[#E8B4C8]' },
+  Impact: { color: 'text-[#B4C8E8]', bg: 'bg-[#B4C8E8]' },
+  Mavrly: { color: 'text-[#C8E8B4]', bg: 'bg-[#C8E8B4]' },
+  Daraz: { color: 'text-[#E8D4B4]', bg: 'bg-[#E8D4B4]' },
 };
 
 export default function SourceBreakdown({ products }: SourceBreakdownProps) {

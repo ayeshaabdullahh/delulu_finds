@@ -3,7 +3,7 @@ import { X, Image, Link as LinkIcon } from 'lucide-react';
 import { Product, supabase } from '../../lib/supabase';
 
 const categories = ['Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
-const sources = ['Amazon', 'Etsy', 'Daraz', 'ShareASale'];
+const sources = ['AWIN', 'Impact', 'Mavrly', 'Daraz'];
 const tagOptions = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
 
 function slugify(text: string) {
@@ -27,7 +27,7 @@ export interface ProductForm {
 
 export const emptyForm: ProductForm = {
   name: '', slug: '', description: '', image_url: '', affiliate_url: '',
-  price: '', original_price: '', source: 'Amazon', category: 'Clothing',
+  price: '', original_price: '', source: 'AWIN', category: 'Clothing',
   aesthetic_tags: [], is_featured: false, is_new_arrival: false,
 };
 

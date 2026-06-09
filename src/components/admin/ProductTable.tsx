@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import { Pencil, Trash2, Search, ExternalLink, Eye, Star, ArrowUpDown } from 'lucide-react';
 import { Product } from '../../lib/supabase';
 
-const sourceClass = (source: string) => {
+const sourceBadge = (source: string) => {
   const s = source.toLowerCase();
-  if (s.includes('amazon')) return 'source-amazon';
-  if (s.includes('etsy')) return 'source-etsy';
-  if (s.includes('daraz')) return 'source-daraz';
-  if (s.includes('shareasale')) return 'source-shareasale';
-  return 'source-amazon';
+  if (s.includes('awin')) return { label: 'AWN', className: 'source-awn' };
+  if (s.includes('impact')) return { label: 'IMP', className: 'source-imp' };
+  if (s.includes('mavrly')) return { label: 'MVR', className: 'source-mvr' };
+  if (s.includes('daraz')) return { label: 'DRZ', className: 'source-drz' };
+  return { label: source, className: 'source-drz' };
 };
 
 interface ProductTableProps {
@@ -136,7 +136,7 @@ export default function ProductTable({ products, onEdit, onDelete }: ProductTabl
                   </div>
                 </td>
                 <td className="p-3 sm:p-4">
-                  <span className={`source-badge ${sourceClass(p.source)}`}>{p.source}</span>
+                  <span className={`source-badge ${sourceBadge(p.source).className}`}>{sourceBadge(p.source).label}</span>
                 </td>
                 <td className="p-3 sm:p-4 text-xs text-gray-500 font-body">{p.category}</td>
                 <td className="p-3 sm:p-4">

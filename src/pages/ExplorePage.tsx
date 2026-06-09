@@ -4,13 +4,22 @@ import { Heart, ExternalLink, SlidersHorizontal } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
 
-const sourceClass = (source: string) => {
+const sourceBadgeClass = (source: string) => {
   const s = source.toLowerCase();
-  if (s.includes('amazon')) return 'source-amazon';
-  if (s.includes('etsy')) return 'source-etsy';
-  if (s.includes('daraz')) return 'source-daraz';
-  if (s.includes('shareasale')) return 'source-shareasale';
-  return 'source-amazon';
+  if (s.includes('awin')) return 'source-awn';
+  if (s.includes('impact')) return 'source-imp';
+  if (s.includes('mavrly')) return 'source-mvr';
+  if (s.includes('daraz')) return 'source-drz';
+  return 'source-drz';
+};
+
+const sourceLabel = (source: string) => {
+  const s = source.toLowerCase();
+  if (s.includes('awin')) return 'AWN';
+  if (s.includes('impact')) return 'IMP';
+  if (s.includes('mavrly')) return 'MVR';
+  if (s.includes('daraz')) return 'DRZ';
+  return source;
 };
 
 const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
@@ -167,7 +176,7 @@ export default function ExplorePage() {
                       <img src={product.image_url} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                     </Link>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <span className={`absolute top-3 left-3 source-badge ${sourceClass(product.source)}`}>{product.source}</span>
+                    <span className={`absolute top-3 left-3 source-badge ${sourceBadgeClass(product.source)}`}>{sourceLabel(product.source)}</span>
                     {product.aesthetic_tags?.[0] && (
                       <span className="absolute top-3 right-12 text-[10px] tracking-wider uppercase font-bold bg-white/70 backdrop-blur-sm text-lavender-400 rounded-full px-3 py-1 font-body">
                         {product.aesthetic_tags[0]}

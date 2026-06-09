@@ -4,13 +4,22 @@ import { Heart, ExternalLink } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
 
-const sourceClass = (source: string) => {
+const sourceBadgeClass = (source: string) => {
   const s = source.toLowerCase();
-  if (s.includes('amazon')) return 'source-amazon';
-  if (s.includes('etsy')) return 'source-etsy';
-  if (s.includes('daraz')) return 'source-daraz';
-  if (s.includes('shareasale')) return 'source-shareasale';
-  return 'source-amazon';
+  if (s.includes('awin')) return 'source-awn';
+  if (s.includes('impact')) return 'source-imp';
+  if (s.includes('mavrly')) return 'source-mvr';
+  if (s.includes('daraz')) return 'source-drz';
+  return 'source-drz';
+};
+
+const sourceLabel = (source: string) => {
+  const s = source.toLowerCase();
+  if (s.includes('awin')) return 'AWN';
+  if (s.includes('impact')) return 'IMP';
+  if (s.includes('mavrly')) return 'MVR';
+  if (s.includes('daraz')) return 'DRZ';
+  return source;
 };
 
 function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isSaved: boolean; onToggleSave: (id: string) => void }) {
@@ -38,8 +47,8 @@ function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isS
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* Source badge */}
-        <span className={`absolute top-3 left-3 source-badge ${sourceClass(product.source)}`}>
-          {product.source}
+        <span className={`absolute top-3 left-3 source-badge ${sourceBadgeClass(product.source)}`}>
+          {sourceLabel(product.source)}
         </span>
 
         {/* Aesthetic tag */}
