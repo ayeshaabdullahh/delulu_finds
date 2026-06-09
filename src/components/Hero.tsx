@@ -48,7 +48,7 @@ function FloatingBow({ className, delay = 0 }: { className?: string; delay?: num
   );
 }
 
-const trendingTags = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney'];
+const trendingTags = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
 
 export default function Hero() {
   return (

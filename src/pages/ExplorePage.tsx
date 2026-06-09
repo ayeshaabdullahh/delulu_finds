@@ -13,9 +13,9 @@ const sourceClass = (source: string) => {
   return 'source-amazon';
 };
 
-const categories = ['All', 'Tops', 'Dresses', 'Sets', 'Knitwear', 'Bottoms', 'Outerwear', 'Accessories'];
-const vibes = ['All', '#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney'];
-const priceRanges = ['All', 'Under $25', 'Under $50', 'Under $100', '$100+'];
+const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
+const vibes = ['All', '#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
+const priceRanges = ['All', 'Under $10', 'Under $25', 'Under $50', '$50+'];
 
 export default function ExplorePage() {
   const [searchParams] = useSearchParams();
@@ -31,6 +31,8 @@ export default function ExplorePage() {
   useEffect(() => {
     const filter = searchParams.get('filter');
     if (filter === 'new') setCategory('All');
+    if (filter === 'under10') setPriceRange('Under $10');
+    if (filter === 'under50') setPriceRange('Under $50');
   }, [searchParams]);
 
   useEffect(() => {
@@ -47,10 +49,10 @@ export default function ExplorePage() {
           filtered = filtered.filter((p) => {
             const price = parseFloat(p.price.replace(/[^0-9.]/g, ''));
             if (isNaN(price)) return true;
+            if (priceRange === 'Under $10') return price < 10;
             if (priceRange === 'Under $25') return price < 25;
             if (priceRange === 'Under $50') return price < 50;
-            if (priceRange === 'Under $100') return price < 100;
-            if (priceRange === '$100+') return price >= 100;
+            if (priceRange === '$50+') return price >= 50;
             return true;
           });
         }

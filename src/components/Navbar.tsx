@@ -1,18 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, Heart } from 'lucide-react';
+import { Search, Menu, X, Heart, ChevronDown } from 'lucide-react';
+
+const categories = ['Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const navigate = useNavigate();
+  const categoriesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (categoriesRef.current && !categoriesRef.current.contains(e.target as Node)) {
+        setCategoriesOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -24,10 +38,15 @@ export default function Navbar() {
     }
   };
 
+  const handleCategoryClick = (cat: string) => {
+    setCategoriesOpen(false);
+    navigate(`/explore?category=${encodeURIComponent(cat)}`);
+  };
+
   const links = [
     { label: 'Trending', to: '/explore' },
     { label: 'New Finds', to: '/explore?filter=new' },
-    { label: 'Under $50', to: '/explore?filter=under50' },
+    { label: 'Under $10', to: '/explore?filter=under10' },
     { label: 'Lookbook', to: '/#lookbook' },
   ];
 
@@ -49,15 +68,40 @@ export default function Navbar() {
               {mobileOpen ? <X size={22} className="text-blush-400" /> : <Menu size={22} className="text-blush-400" />}
             </button>
 
-            {/* Logo */}
+            {/* Logo - Bigger and more prominent */}
             <Link to="/" className="flex items-center gap-2">
-              <span className="font-display text-2xl sm:text-3xl font-semibold tracking-wide text-gradient">
+              <span className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-wide text-gradient drop-shadow-sm">
                 DELULU FINDS
               </span>
             </Link>
 
             {/* Desktop nav links */}
             <div className="hidden lg:flex items-center gap-8">
+              {/* Categories dropdown */}
+              <div className="relative" ref={categoriesRef}>
+                <button
+                  onClick={() => setCategoriesOpen(!categoriesOpen)}
+                  className="text-sm font-semibold text-gray-600 hover:text-blush-400 transition-colors relative group flex items-center gap-1"
+                >
+                  Categories
+                  <ChevronDown size={14} className={`transition-transform ${categoriesOpen ? 'rotate-180' : ''}`} />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blush-200 transition-all duration-300 group-hover:w-full rounded-full" />
+                </button>
+                {categoriesOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-52 glass-card rounded-2xl py-3 shadow-xl animate-slide-up z-50">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => handleCategoryClick(cat)}
+                        className="w-full text-left px-4 py-2.5 text-sm font-semibold text-gray-600 hover:text-blush-400 hover:bg-blush-50/50 transition-colors"
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {links.map((link) => (
                 <Link
                   key={link.label}
@@ -70,15 +114,31 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Right icons */}
+            {/* Right icons - Search bar always visible */}
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Search bar - always visible on desktop */}
+              <form onSubmit={handleSearch} className="hidden sm:flex items-center">
+                <div className="relative">
+                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search finds..."
+                    className="pl-9 pr-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-blush-100/50 text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all font-body w-48 lg:w-64"
+                  />
+                </div>
+              </form>
+
+              {/* Mobile search toggle */}
               <button
-                className="p-2 rounded-full hover:bg-blush-100/50 transition-colors"
+                className="sm:hidden p-2 rounded-full hover:bg-blush-100/50 transition-colors"
                 onClick={() => setSearchOpen(!searchOpen)}
                 aria-label="Search"
               >
                 <Search size={20} className="text-gray-500 hover:text-blush-400 transition-colors" />
               </button>
+
               <Link to="/saved" className="p-2 rounded-full hover:bg-blush-100/50 transition-colors relative" aria-label="Saved finds">
                 <Heart size={20} className="text-gray-500 hover:text-blush-400 transition-colors" />
               </Link>
@@ -86,18 +146,21 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Search bar dropdown */}
+        {/* Mobile search bar dropdown */}
         {searchOpen && (
-          <div className="glass-nav px-4 pb-4 animate-slide-up">
+          <div className="glass-nav px-4 pb-4 animate-slide-up sm:hidden">
             <form onSubmit={handleSearch} className="max-w-xl mx-auto">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search finds... (e.g. coquette, silk dress, under $50)"
-                className="w-full px-5 py-3 rounded-full bg-white/60 backdrop-blur-sm border border-blush-100/50 text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all font-body"
-                autoFocus
-              />
+              <div className="relative">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search finds..."
+                  className="w-full pl-9 pr-4 py-3 rounded-full bg-white/60 backdrop-blur-sm border border-blush-100/50 text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all font-body"
+                  autoFocus
+                />
+              </div>
             </form>
           </div>
         )}
@@ -105,10 +168,26 @@ export default function Navbar() {
         {/* Mobile menu */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            mobileOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="glass-nav px-4 pb-6 pt-2">
+            {/* Mobile categories */}
+            <div className="mb-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body mb-2 px-2">Categories</p>
+              <div className="flex flex-wrap gap-2 px-2 mb-3">
+                {categories.map((cat) => (
+                  <Link
+                    key={cat}
+                    to={`/explore?category=${encodeURIComponent(cat)}`}
+                    className="text-xs font-semibold text-gray-600 hover:text-blush-400 transition-colors bg-white/50 px-3 py-1.5 rounded-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {cat}
+                  </Link>
+                ))}
+              </div>
+            </div>
             {links.map((link) => (
               <Link
                 key={link.label}

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { X, Image, Link as LinkIcon } from 'lucide-react';
 import { Product, supabase } from '../../lib/supabase';
 
-const categories = ['Tops', 'Dresses', 'Sets', 'Knitwear', 'Bottoms', 'Outerwear', 'Accessories'];
+const categories = ['Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 const sources = ['Amazon', 'Etsy', 'Daraz', 'ShareASale'];
-const tagOptions = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney'];
+const tagOptions = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -27,7 +27,7 @@ export interface ProductForm {
 
 export const emptyForm: ProductForm = {
   name: '', slug: '', description: '', image_url: '', affiliate_url: '',
-  price: '', original_price: '', source: 'Amazon', category: 'Tops',
+  price: '', original_price: '', source: 'Amazon', category: 'Clothing',
   aesthetic_tags: [], is_featured: false, is_new_arrival: false,
 };
 

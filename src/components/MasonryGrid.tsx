@@ -103,7 +103,7 @@ export default function MasonryGrid() {
     getProducts({ category: category === 'All' ? undefined : category }).then(setProducts).catch(() => {});
   }, [category]);
 
-  const categories = ['All', 'Tops', 'Dresses', 'Sets', 'Knitwear', 'Bottoms', 'Outerwear', 'Accessories'];
+  const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 
   return (
     <section className="py-20 sm:py-28 relative" id="collections">

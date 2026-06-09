@@ -5,13 +5,16 @@ interface CategoryBreakdownProps {
 }
 
 const categoryColors: Record<string, string> = {
-  Tops: 'bg-blush-200',
-  Dresses: 'bg-lavender-200',
-  Sets: 'bg-peach-200',
-  Knitwear: 'bg-blush-300',
-  Bottoms: 'bg-lavender-300',
-  Outerwear: 'bg-peach-300',
-  Accessories: 'bg-blush-100',
+  Clothing: 'bg-blush-200',
+  Shoes: 'bg-lavender-200',
+  Bags: 'bg-peach-200',
+  Jewelry: 'bg-blush-300',
+  Accessories: 'bg-lavender-300',
+  Beauty: 'bg-peach-300',
+  Nails: 'bg-blush-100',
+  Swimwear: 'bg-lavender-100',
+  Abayas: 'bg-peach-100',
+  Scarves: 'bg-blush-400',
 };
 
 export default function CategoryBreakdown({ products }: CategoryBreakdownProps) {
