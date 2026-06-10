@@ -1,4 +1,5 @@
 import Hero from '../components/Hero';
+import TrendingHashtags from '../components/TrendingHashtags';
 import ProductCarousel from '../components/ProductCarousel';
 import NewArrivals from '../components/NewArrivals';
 import Features from '../components/Features';
@@ -10,6 +11,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <TrendingHashtags />
       <ProductCarousel />
       <NewArrivals />
       <Features />

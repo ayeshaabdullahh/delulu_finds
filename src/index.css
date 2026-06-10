@@ -15,26 +15,26 @@
 
   body {
     font-family: 'Nunito', sans-serif;
-    background-color: #FFF8F5;
-    color: #2E2E2E;
+    background-color: #FFFFFF;
+    color: #1A1A1A;
     overflow-x: hidden;
   }
 
   ::selection {
-    background-color: #F2A7BB;
+    background-color: #B5657B;
     color: white;
   }
 }
 
 @layer components {
   .glass-card {
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow:
-      0 8px 32px rgba(242, 167, 187, 0.12),
-      0 2px 8px rgba(0, 0, 0, 0.04);
+      0 8px 32px rgba(0, 0, 0, 0.06),
+      0 2px 8px rgba(0, 0, 0, 0.02);
   }
 
   .glass-card-hover {
@@ -42,22 +42,22 @@
   }
 
   .glass-card-hover:hover {
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.95);
     box-shadow:
-      0 12px 40px rgba(242, 167, 187, 0.18),
-      0 4px 12px rgba(0, 0, 0, 0.06);
+      0 12px 40px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.04);
     transform: translateY(-4px);
   }
 
   .glass-nav {
-    background: rgba(255, 248, 245, 0.72);
+    background: rgba(13, 13, 13, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(181, 101, 123, 0.2);
   }
 
   .clay-button {
-    background: linear-gradient(135deg, #F2A7BB 0%, #E889A8 100%);
+    background: #B5657B;
     color: white;
     border: none;
     border-radius: 50px;
@@ -67,54 +67,41 @@
     letter-spacing: 0.05em;
     cursor: pointer;
     box-shadow:
-      0 4px 12px rgba(242, 167, 187, 0.4),
-      0 2px 4px rgba(242, 167, 187, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      inset 0 -2px 0 rgba(200, 100, 130, 0.15);
+      0 4px 12px rgba(181, 101, 123, 0.3),
+      0 2px 4px rgba(181, 101, 123, 0.15);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .clay-button:hover {
     transform: translateY(-2px) scale(1.05);
     box-shadow:
-      0 6px 20px rgba(242, 167, 187, 0.5),
-      0 3px 8px rgba(242, 167, 187, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -2px 0 rgba(200, 100, 130, 0.15);
+      0 6px 20px rgba(181, 101, 123, 0.4),
+      0 3px 8px rgba(181, 101, 123, 0.2);
   }
 
   .clay-button:active {
     transform: translateY(1px) scale(0.97);
     box-shadow:
-      0 2px 6px rgba(242, 167, 187, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 rgba(200, 100, 130, 0.1);
+      0 2px 6px rgba(181, 101, 123, 0.3);
   }
 
   .clay-button-outline {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(8px);
-    color: #C4557A;
-    border: 2px solid rgba(242, 167, 187, 0.5);
+    background: transparent;
+    color: #1A1A1A;
+    border: 2px solid #1A1A1A;
     border-radius: 50px;
     padding: 10px 30px;
     font-weight: 600;
     font-size: 0.875rem;
     letter-spacing: 0.05em;
     cursor: pointer;
-    box-shadow:
-      0 4px 12px rgba(242, 167, 187, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .clay-button-outline:hover {
-    background: rgba(242, 167, 187, 0.15);
-    border-color: rgba(242, 167, 187, 0.7);
+    background: rgba(26, 26, 26, 0.05);
+    border-color: #1A1A1A;
     transform: translateY(-2px) scale(1.05);
-    box-shadow:
-      0 6px 20px rgba(242, 167, 187, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
   }
 
   .clay-button-outline:active {
@@ -126,7 +113,7 @@
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(242, 167, 187, 0.35) 0%, rgba(242, 167, 187, 0) 70%);
+    background: radial-gradient(circle, rgba(181, 101, 123, 0.25) 0%, rgba(181, 101, 123, 0) 70%);
     filter: blur(40px);
     pointer-events: none;
   }
@@ -165,30 +152,22 @@
 
   .floating-object {
     animation: float 6s ease-in-out infinite;
-    filter: drop-shadow(0 8px 16px rgba(242, 167, 187, 0.2));
+    filter: drop-shadow(0 8px 16px rgba(181, 101, 123, 0.15));
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #C4557A 0%, #8568CC 50%, #C4557A 100%);
+    background: linear-gradient(135deg, #B5657B 0%, #B5657B 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .shimmer-text {
-    background: linear-gradient(
-      90deg,
-      #C4557A 0%,
-      #8568CC 25%,
-      #C4557A 50%,
-      #8568CC 75%,
-      #C4557A 100%
-    );
-    background-size: 200% auto;
+    background: #B5657B;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 3s linear infinite;
+    font-style: italic;
   }
 
   .source-badge {
@@ -201,23 +180,23 @@
   }
 
   .source-awn {
-    background: #E8B4C8;
-    color: #2A1A1E;
+    background: rgba(181, 101, 123, 0.8);
+    color: white;
   }
 
   .source-imp {
-    background: #B4C8E8;
-    color: #1A1E2A;
+    background: rgba(26, 26, 26, 0.75);
+    color: white;
   }
 
   .source-mvr {
-    background: #C8E8B4;
-    color: #1E2A1A;
+    background: rgba(181, 101, 123, 0.6);
+    color: white;
   }
 
   .source-drz {
-    background: #E8D4B4;
-    color: #2A221A;
+    background: rgba(26, 26, 26, 0.6);
+    color: white;
   }
 
   .bottom-nav {
@@ -226,10 +205,10 @@
     left: 0;
     right: 0;
     z-index: 50;
-    background: rgba(255, 248, 245, 0.9);
+    background: rgba(13, 13, 13, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(242, 167, 187, 0.2);
+    border-top: 1px solid rgba(181, 101, 123, 0.2);
     padding: 8px 0;
     padding-bottom: max(8px, env(safe-area-inset-bottom));
   }
@@ -258,14 +237,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFF8F5;
+  background: #FDF6F0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #F2A7BB;
+  background: #B5657B;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #E889A8;
+  background: #9A4F62;
 }

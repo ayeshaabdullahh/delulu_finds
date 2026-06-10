@@ -40,27 +40,27 @@ export default function NewArrivals() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-16 sm:py-20 relative overflow-hidden">
+    <section className="py-16 sm:py-20 relative overflow-hidden bg-white">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-peach-200/10 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-mauve/5 blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <span className="inline-block text-xs tracking-[0.3em] uppercase text-peach-300 font-bold mb-2 font-body">
+            <span className="inline-block text-xs tracking-[0.3em] uppercase text-mauve font-bold mb-2 font-body">
               Just Dropped
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-semibold text-charcoal">
-              New <span className="text-gradient">Arrivals</span>
+              New <span className="text-mauve italic">Arrivals</span>
             </h2>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => scroll('left')} className="w-9 h-9 rounded-full glass-card flex items-center justify-center hover:bg-white/60 transition-all" aria-label="Scroll left">
-              <ChevronLeft size={16} className="text-blush-400" />
+            <button onClick={() => scroll('left')} className="w-9 h-9 rounded-full glass-card flex items-center justify-center hover:bg-white transition-all" aria-label="Scroll left">
+              <ChevronLeft size={16} className="text-mauve" />
             </button>
-            <button onClick={() => scroll('right')} className="w-9 h-9 rounded-full glass-card flex items-center justify-center hover:bg-white/60 transition-all" aria-label="Scroll right">
-              <ChevronRight size={16} className="text-blush-400" />
+            <button onClick={() => scroll('right')} className="w-9 h-9 rounded-full glass-card flex items-center justify-center hover:bg-white transition-all" aria-label="Scroll right">
+              <ChevronRight size={16} className="text-mauve" />
             </button>
           </div>
         </div>
@@ -92,15 +92,15 @@ export default function NewArrivals() {
                   className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-0 group-hover:opacity-100"
                   aria-label={savedIds.has(product.id) ? 'Unsave' : 'Save'}
                 >
-                  <Heart size={12} className={savedIds.has(product.id) ? 'text-blush-400 fill-blush-400' : 'text-blush-400'} fill={savedIds.has(product.id) ? 'currentColor' : 'none'} />
+                  <Heart size={12} className={savedIds.has(product.id) ? 'text-mauve fill-mauve' : 'text-mauve'} fill={savedIds.has(product.id) ? 'currentColor' : 'none'} />
                 </button>
               </div>
               <div className="p-3">
-                <Link to={`/product/${product.slug}`} className="font-display text-xs font-medium text-charcoal hover:text-blush-400 transition-colors line-clamp-1 block">
+                <Link to={`/product/${product.slug}`} className="font-display text-xs font-medium text-charcoal hover:text-mauve transition-colors line-clamp-1 block">
                   {product.name}
                 </Link>
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-blush-400 font-bold text-xs font-body">{product.price}</span>
+                  <span className="text-mauve font-bold text-xs font-body">{product.price}</span>
                   <a
                     href={product.affiliate_url}
                     target="_blank"

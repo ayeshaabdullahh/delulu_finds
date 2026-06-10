@@ -53,7 +53,7 @@ function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isS
 
         {/* Aesthetic tag */}
         {product.aesthetic_tags?.[0] && (
-          <span className="absolute top-3 right-12 text-[10px] tracking-wider uppercase font-bold bg-white/70 backdrop-blur-sm text-lavender-400 rounded-full px-3 py-1 font-body">
+          <span className="absolute top-3 right-12 text-[10px] tracking-wider uppercase font-bold bg-white/70 backdrop-blur-sm text-muted rounded-full px-3 py-1 font-body">
             {product.aesthetic_tags[0]}
           </span>
         )}
@@ -66,26 +66,26 @@ function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isS
           }`}
           aria-label={isSaved ? 'Unsave' : 'Save'}
         >
-          <Heart size={14} className={isSaved ? 'text-blush-400 fill-blush-400' : 'text-blush-400'} fill={isSaved ? 'currentColor' : 'none'} />
+          <Heart size={14} className={isSaved ? 'text-mauve fill-mauve' : 'text-mauve'} fill={isSaved ? 'currentColor' : 'none'} />
         </button>
 
         {/* Category pill */}
         <div className="absolute bottom-3 left-3 flex items-center gap-2">
-          <span className="text-[10px] tracking-wider uppercase font-bold bg-white/70 backdrop-blur-sm text-gray-600 rounded-full px-3 py-1 font-body">
+          <span className="text-[10px] tracking-wider uppercase font-bold bg-white/70 backdrop-blur-sm text-muted rounded-full px-3 py-1 font-body">
             {product.category}
           </span>
         </div>
       </div>
 
       <div className="p-4">
-        <Link to={`/product/${product.slug}`} className="font-display text-sm font-medium text-charcoal hover:text-blush-400 transition-colors line-clamp-1 block">
+        <Link to={`/product/${product.slug}`} className="font-display text-sm font-medium text-charcoal hover:text-mauve transition-colors line-clamp-1 block">
           {product.name}
         </Link>
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-2">
-            <span className="text-blush-400 font-bold text-sm font-body">{product.price}</span>
+            <span className="text-mauve font-bold text-sm font-body">{product.price}</span>
             {product.original_price && (
-              <span className="text-gray-300 text-xs line-through font-body">{product.original_price}</span>
+              <span className="text-muted/50 text-xs line-through font-body">{product.original_price}</span>
             )}
           </div>
           <a
@@ -115,21 +115,21 @@ export default function MasonryGrid() {
   const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 
   return (
-    <section className="py-20 sm:py-28 relative" id="collections">
+    <section className="py-20 sm:py-28 relative bg-white" id="collections">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-lavender-200/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-peach-200/10 blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-mauve/5 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-charcoal/5 blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-16">
-          <span className="inline-block text-xs tracking-[0.3em] uppercase text-lavender-300 font-bold mb-3 font-body">
+          <span className="inline-block text-xs tracking-[0.3em] uppercase text-muted font-bold mb-3 font-body">
             Curated For You
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-charcoal mb-4">
-            The <span className="text-gradient">Edit</span>
+            The <span className="text-mauve italic">Edit</span>
           </h2>
-          <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto font-body">
+          <p className="text-muted text-sm sm:text-base max-w-md mx-auto font-body">
             Handpicked finds from across the internet, curated with love
           </p>
         </div>
@@ -141,7 +141,7 @@ export default function MasonryGrid() {
               key={cat}
               onClick={() => setCategory(cat)}
               className={`clay-button-outline !py-2 !px-5 !text-xs font-body ${
-                category === cat ? 'bg-blush-200/20 border-blush-200/70 text-blush-400' : ''
+                category === cat ? 'bg-charcoal/10 border-charcoal text-charcoal' : ''
               }`}
             >
               {cat}
@@ -163,7 +163,7 @@ export default function MasonryGrid() {
 
         {products.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-gray-300 font-body">No finds yet in this category. Check back soon!</p>
+            <p className="text-muted font-body">No finds yet in this category. Check back soon!</p>
           </div>
         )}
       </div>

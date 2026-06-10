@@ -4,6 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
+        // New brand colors
+        dark: {
+          DEFAULT: '#0D0D0D',
+          light: '#1A1A1A',
+        },
+        mauve: {
+          DEFAULT: '#B5657B',
+          light: '#C98A9E',
+          dark: '#9A4F62',
+        },
+        cream: '#FDF6F0',
+        charcoal: '#1A1A1A',
+        muted: '#6B6B6B',
+        // Legacy colors for backward compatibility
         blush: {
           50: '#FFF0F4',
           100: '#FFE0E8',
@@ -28,15 +42,6 @@ export default {
           400: '#FFB090',
           500: '#FF9C78',
         },
-        cream: {
-          50: '#FFFDFB',
-          100: '#FFF8F5',
-          200: '#FFF0EA',
-          300: '#FFE8E0',
-          400: '#FFDDD2',
-          500: '#FFD0C2',
-        },
-        charcoal: '#2E2E2E',
       },
       fontFamily: {
         display: ['Playfair Display', 'serif'],
@@ -53,6 +58,7 @@ export default {
         'shimmer': 'shimmer 3s linear infinite',
         'heart-bounce': 'heartBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
         'slide-up': 'slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'marquee': 'marquee 25s linear infinite',
       },
       keyframes: {
         float: {
@@ -84,6 +90,10 @@ export default {
         slideUp: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
     },
