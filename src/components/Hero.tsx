@@ -156,11 +156,12 @@ export default function Hero() {
                 }}
               >
                 <img
-                  src="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/image copy.png"
                   alt="Fashion editorial - confident woman in dark elegant outfit"
                   className="w-full h-full object-cover"
                   style={{
                     filter: 'contrast(1.05) saturate(1.1)',
+                    objectPosition: 'center top',
                   }}
                 />
                 {/* Gradient overlay for editorial feel */}
