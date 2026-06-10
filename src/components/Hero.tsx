@@ -30,7 +30,7 @@ export default function Hero() {
       {/* Giant watermark text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0">
         <span
-          className="font-display font-bold tracking-wider whitespace-nowrap select-none"
+          className="font-display font-bold whitespace-nowrap select-none"
           style={{
             fontSize: 'clamp(8rem, 20vw, 22rem)',
             color: '#1A1A1A',
@@ -38,7 +38,7 @@ export default function Hero() {
             letterSpacing: '0.02em',
           }}
         >
-          DELULU FINDS
+          DELULUFINDS
         </span>
       </div>
 
