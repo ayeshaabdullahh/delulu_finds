@@ -53,9 +53,14 @@ export async function getProducts(options?: {
 }): Promise<Product[]> {
   let query = supabase
     .from('products')
-    .select('*')
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false });
+    .select('*');
+  if (options?.newArrival) {
+    query = query.order('created_at', { ascending: false });
+  } else {
+    query = query
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
+  }
 
   if (options?.category && options.category !== 'All') {
     query = query.eq('category', options.category);
