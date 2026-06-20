@@ -69,11 +69,10 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-1">
-              <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-wide text-white">
+            <Link to="/" className="flex items-center">
+              <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-wide text-white whitespace-nowrap">
                 DELULU FINDS
               </span>
-              <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-wide text-mauve">.me</span>
             </Link>
 
             {/* Desktop nav links */}
