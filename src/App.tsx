@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -8,9 +8,9 @@ import SearchPage from './pages/SearchPage';
 import SavedPage from './pages/SavedPage';
 import AdminPage from './pages/AdminPage';
 
-function ScrollToTop() {
-  const { pathname } = window.location;
-  return null;
+function RedirectToProduct() {
+  const { slug } = useParams();
+  return <Navigate to={`/product/${slug}`} replace />;
 }
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/explore" element={<ExplorePage />} />
           <Route path="/product/:slug" element={<ProductPage />} />
+          <Route path="/products/:slug" element={<RedirectToProduct />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/admin" element={<AdminPage />} />
