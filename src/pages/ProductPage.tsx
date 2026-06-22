@@ -20,8 +20,9 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const { savedIds, toggleSave } = useSavedItems();
 
-  useEffect(() => {
+ useEffect(() => {
     if (!slug) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
     setLoading(true);
     getProductBySlug(slug)
       .then((p) => {
