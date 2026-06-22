@@ -118,7 +118,7 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <a
+              <a 
                 href={product.affiliate_url}
                 target="_blank"
                 rel="noopener noreferrer"
