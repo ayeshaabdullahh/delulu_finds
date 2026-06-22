@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, Heart, ArrowLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, Heart, ChevronRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
 
@@ -22,6 +22,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     if (!slug) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setLoading(true);
     getProductBySlug(slug)
       .then((p) => {
@@ -74,7 +75,7 @@ export default function ProductPage() {
             <img
               src={product.image_url}
               alt={product.name}
-              className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-contain bg-gray-50 transition-transform duration-700 group-hover:scale-105"
             />
             <span className={`absolute top-4 left-4 source-badge ${sourceBadgeClass(product.source)}`}>
               {product.source}
@@ -83,7 +84,7 @@ export default function ProductPage() {
 
           {/* Details */}
           <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
               <span className="text-[10px] tracking-wider uppercase font-bold bg-blush-100/60 text-blush-400 rounded-full px-3 py-1 font-body">
                 {product.category}
               </span>
@@ -117,7 +118,7 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <a
+              
                 href={product.affiliate_url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -138,7 +139,7 @@ export default function ProductPage() {
             </div>
 
             {/* Pin It button */}
-            <a
+            
               href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.href)}&media=${encodeURIComponent(product.image_url)}&description=${encodeURIComponent(product.name)}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -156,11 +157,11 @@ export default function ProductPage() {
             <h2 className="font-display text-2xl sm:text-3xl font-semibold text-charcoal mb-8">
               More <span className="text-gradient">Finds</span> You'll Love
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
               {related.map((p) => (
                 <Link key={p.id} to={`/product/${p.slug}`} className="glass-card glass-card-hover rounded-2xl overflow-hidden group">
                   <div className="h-40 overflow-hidden">
-                    <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+                    <img src={p.image_url} alt={p.name} className="w-full h-full object-contain bg-gray-50 transition-transform duration-500 group-hover:scale-110" loading="lazy" />
                   </div>
                   <div className="p-3">
                     <h3 className="font-display text-xs font-medium text-charcoal line-clamp-1">{p.name}</h3>
