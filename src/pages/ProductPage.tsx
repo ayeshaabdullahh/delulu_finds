@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, Heart, ArrowLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, Heart, ChevronRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
 
