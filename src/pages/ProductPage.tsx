@@ -96,7 +96,7 @@ export default function ProductPage() {
             </div>
 
             <h1 className="font-display text-3xl sm:text-4xl font-semibold text-charcoal mb-4">
-              {product.name}
+             ${product.name}
             </h1>
 
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6 font-body">
@@ -104,7 +104,7 @@ export default function ProductPage() {
             </p>
 
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-blush-400 font-bold text-2xl font-body">{product.price}</span>
+              <span className="text-blush-400 font-bold text-2xl font-body">${product.price}</span>
               {product.original_price && (
                 <span className="text-gray-300 text-lg line-through font-body">{product.original_price}</span>
               )}
@@ -165,7 +165,7 @@ export default function ProductPage() {
                   </div>
                   <div className="p-3">
                     <h3 className="font-display text-xs font-medium text-charcoal line-clamp-1">{p.name}</h3>
-                    <span className="text-blush-400 font-bold text-xs font-body">{p.price}</span>
+                    <span className="text-blush-400 font-bold text-xs font-body">${p.price}</span>
                   </div>
                 </Link>
               ))}
