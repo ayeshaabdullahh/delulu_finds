@@ -101,8 +101,7 @@ export async function getRelatedProducts(productId: string, category: string): P
     .from('products')
     .select('*')
     .eq('category', category)
-    .neq('id', productId)
-    .limit(6);
+    .neq('id', productId);
   if (error) throw error;
   return (data || []) as Product[];
 }
