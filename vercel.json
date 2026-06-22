@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/products/:slug", "destination": "/product/:slug", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
