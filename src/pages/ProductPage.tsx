@@ -72,11 +72,13 @@ export default function ProductPage() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 mb-20">
           {/* Image */}
           <div className="glass-card rounded-3xl overflow-hidden relative group">
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
-            />
+            <a href={product.affiliate_url} target="_blank" rel="noopener noreferrer sponsored">
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
+              />
+            </a>
             <span className={`absolute top-4 left-4 source-badge ${sourceBadgeClass(product.source)}`}>
               {product.source}
             </span>
@@ -121,7 +123,7 @@ export default function ProductPage() {
               <a 
                 href={product.affiliate_url}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer sponsored"
                 className="clay-button tracking-widest uppercase text-xs flex items-center justify-center gap-2"
               >
                 <ExternalLink size={16} />
@@ -139,7 +141,7 @@ export default function ProductPage() {
             </div>
 
             {/* Pin It button */}
-            <a
+            
               href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.href)}&media=${encodeURIComponent(product.image_url)}&description=${encodeURIComponent(product.name)}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -159,15 +161,20 @@ export default function ProductPage() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {related.map((p) => (
-                <Link key={p.id} to={`/product/${p.slug}`} className="glass-card glass-card-hover rounded-2xl overflow-hidden group">
-                  <div className="h-40 overflow-hidden">
+                <div key={p.id} className="glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                  
+                    href={p.affiliate_url}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="block h-40 overflow-hidden"
+                  >
                     <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
-                  </div>
-                  <div className="p-3">
+                  </a>
+                  <Link to={`/product/${p.slug}`} className="block p-3">
                     <h3 className="font-display text-xs font-medium text-charcoal line-clamp-1">{p.name}</h3>
                     <span className="text-blush-400 font-bold text-xs font-body">${p.price}</span>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               ))}
             </div>
           </div>
