@@ -114,7 +114,7 @@ export default function ProductPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              
+              <a
                 href={product.affiliate_url}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
@@ -134,7 +134,7 @@ export default function ProductPage() {
               </button>
             </div>
 
-            
+            <a
               href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.href)}&media=${encodeURIComponent(product.image_url)}&description=${encodeURIComponent(product.name)}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -154,7 +154,7 @@ export default function ProductPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {related.map((p) => (
                 <div key={p.id} className="glass-card glass-card-hover rounded-2xl overflow-hidden group">
-                  
+                  <a
                     href={p.affiliate_url}
                     target="_blank"
                     rel="noopener noreferrer sponsored"
