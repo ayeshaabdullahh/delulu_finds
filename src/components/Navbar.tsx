@@ -47,6 +47,7 @@ export default function Navbar() {
     { label: 'Trending', to: '/explore' },
     { label: 'New Finds', to: '/explore?filter=new' },
     { label: 'Under $10', to: '/explore?filter=under10' },
+    { label: 'Journal', to: '/blog' },
     { label: 'Lookbook', to: '/#lookbook' },
   ];
 

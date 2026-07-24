@@ -7,6 +7,8 @@ import ProductPage from './pages/ProductPage';
 import SearchPage from './pages/SearchPage';
 import SavedPage from './pages/SavedPage';
 import AdminPage from './pages/AdminPage';
+import BlogPage from './pages/BlogPage';
+import BlogPostPage from './pages/BlogPostPage';
 
 function RedirectToProduct() {
   const { slug } = useParams();
@@ -26,6 +28,8 @@ function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />

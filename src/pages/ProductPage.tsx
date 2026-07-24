@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, Heart, ChevronRight } from 'lucide-react';
+import { ExternalLink, Heart, ChevronRight, ArrowRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
+import { getPostByProductSlug, urlFor, BlogPost } from '../lib/sanity';
 
 const sourceBadgeClass = (source: string) => {
   const s = source.toLowerCase();
@@ -17,6 +18,7 @@ export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [related, setRelated] = useState<Product[]>([]);
+  const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const { savedIds, toggleSave } = useSavedItems();
 
@@ -24,11 +26,15 @@ export default function ProductPage() {
     if (!slug) return;
     window.scrollTo({ top: 0, behavior: 'instant' });
     setLoading(true);
+    setBlogPost(null);
     getProductBySlug(slug)
       .then((p) => {
         setProduct(p);
         if (p) {
           getRelatedProducts(p.id, p.category).then(setRelated).catch(() => {});
+          getPostByProductSlug(p.slug)
+            .then(setBlogPost)
+            .catch(() => {});
         }
       })
       .catch(() => {})
@@ -145,6 +151,39 @@ export default function ProductPage() {
             </a>
           </div>
         </div>
+
+        {blogPost && (
+          <div className="mb-20">
+            <div className="glass-card rounded-3xl overflow-hidden grid sm:grid-cols-5 gap-0">
+              {blogPost.coverImage && (
+                <div className="relative sm:col-span-2 h-48 sm:h-full overflow-hidden min-h-[200px]">
+                  <img
+                    src={urlFor(blogPost.coverImage).width(600).url()}
+                    alt={blogPost.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div className={`p-6 sm:p-8 flex flex-col justify-center ${blogPost.coverImage ? 'sm:col-span-3' : 'sm:col-span-5'}`}>
+                <span className="text-[10px] tracking-[0.3em] uppercase text-mauve font-bold mb-3 font-body">From the Journal</span>
+                <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mb-3 leading-tight">
+                  {blogPost.title}
+                </h3>
+                <p className="text-muted text-sm leading-relaxed mb-4 font-body line-clamp-3">
+                  {blogPost.excerpt}
+                </p>
+                <Link
+                  to={`/blog/${blogPost.slug.current}`}
+                  className="inline-flex items-center gap-2 text-mauve font-bold text-xs tracking-widest uppercase font-body hover:gap-3 transition-all"
+                >
+                  Read More
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {related.length > 0 && (
           <div>
