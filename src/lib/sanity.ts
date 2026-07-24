@@ -79,7 +79,6 @@ export async function getPostByProductSlug(productSlug: string): Promise<BlogPos
   return { ...post, slug: { current: post.slug } };
 }
 
-
 export { urlFor }
 
 export { getRecentPosts }
