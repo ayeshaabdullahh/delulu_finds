@@ -2,10 +2,10 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
 export const sanityClient = createClient({
-  projectId: 'je4if4x5kxdnxnrynbfl5po0',
+  projectId: '84umijys',
   dataset: 'production',
   apiVersion: '2024-01-01',
-  useCdn: false,
+  useCdn: true,
   withCredentials: false,
 });
 
@@ -78,3 +78,8 @@ export async function getPostByProductSlug(productSlug: string): Promise<BlogPos
   if (!post) return null;
   return { ...post, slug: { current: post.slug } };
 }
+
+
+export { urlFor }
+
+export { getRecentPosts }
