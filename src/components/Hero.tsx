@@ -25,7 +25,7 @@ export default function Hero() {
   return (
     <section
       className="relative min-h-screen flex items-center overflow-hidden pt-20"
-      style={{ background: '#FDF6F0' }}
+      style={{ background: '#FAF9F7' }}
     >
       {/* Giant watermark text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0">
@@ -168,7 +168,7 @@ export default function Hero() {
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: 'linear-gradient(to top, rgba(253, 246, 240, 0.3) 0%, transparent 30%)',
+                    background: 'linear-gradient(to top, rgba(250, 249, 247, 0.3) 0%, transparent 30%)',
                   }}
                 />
               </div>

@@ -15,7 +15,7 @@
 
   body {
     font-family: 'Nunito', sans-serif;
-    background-color: #FFFFFF;
+    background-color: #FAF9F7;
     color: #1A1A1A;
     overflow-x: hidden;
   }
@@ -237,7 +237,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FDF6F0;
+  background: #FAF9F7;
 }
 
 ::-webkit-scrollbar-thumb {

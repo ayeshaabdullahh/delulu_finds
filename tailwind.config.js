@@ -14,7 +14,7 @@ export default {
           light: '#C98A9E',
           dark: '#9A4F62',
         },
-        cream: '#FDF6F0',
+        cream: '#FAF9F7',
         charcoal: '#1A1A1A',
         muted: '#6B6B6B',
         // Legacy colors for backward compatibility
