@@ -154,8 +154,7 @@ export default function ProductCarousel() {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-mauve font-bold text-sm font-body">{product.price}</span>
+                        <div className="flex items-center justify-end">
                           <a
                             href={product.affiliate_url}
                             target="_blank"

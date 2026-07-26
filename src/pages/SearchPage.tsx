@@ -82,8 +82,7 @@ export default function SearchPage() {
                 </div>
                 <div className="p-4">
                   <Link to={`/product/${product.slug}`} className="font-display text-sm font-medium text-charcoal hover:text-blush-400 transition-colors line-clamp-1 block">{product.name}</Link>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-blush-400 font-bold text-sm font-body">{product.price}</span>
+                  <div className="flex items-center justify-end mt-2">
                     <a href={product.affiliate_url} target="_blank" rel="noopener noreferrer" className="clay-button !py-1.5 !px-4 !text-[10px] flex items-center gap-1">
                       <ExternalLink size={10} />
                       Shop

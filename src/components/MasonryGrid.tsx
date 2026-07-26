@@ -81,13 +81,7 @@ function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isS
         <Link to={`/product/${product.slug}`} className="font-display text-sm font-medium text-charcoal hover:text-mauve transition-colors line-clamp-1 block">
           {product.name}
         </Link>
-        <div className="flex items-center justify-between mt-2">
-          <div className="flex items-center gap-2">
-            <span className="text-mauve font-bold text-sm font-body">{product.price}</span>
-            {product.original_price && (
-              <span className="text-muted/50 text-xs line-through font-body">{product.original_price}</span>
-            )}
-          </div>
+        <div className="flex items-center justify-end mt-2">
           <a
             href={product.affiliate_url}
             target="_blank"

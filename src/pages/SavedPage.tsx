@@ -88,8 +88,7 @@ export default function SavedPage() {
                   <Link to={`/product/${item.product.slug}`} className="font-display text-sm font-medium text-charcoal hover:text-blush-400 transition-colors line-clamp-1 block">
                     {item.product.name}
                   </Link>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-blush-400 font-bold text-sm font-body">{item.product.price}</span>
+                  <div className="flex items-center justify-end mt-2">
                     <a href={item.product.affiliate_url} target="_blank" rel="noopener noreferrer" className="clay-button !py-1.5 !px-4 !text-[10px] flex items-center gap-1">
                       <ExternalLink size={10} />
                       Shop This Look

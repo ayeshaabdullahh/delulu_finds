@@ -120,10 +120,9 @@ export default function BlogPostPage() {
               </div>
               <div className="p-6 sm:p-8 flex flex-col justify-center">
                 <span className="text-[10px] tracking-[0.3em] uppercase text-mauve font-bold mb-3 font-body">Shop The Look</span>
-                <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mb-2 leading-tight">
+                <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mb-4 leading-tight">
                   {relatedProduct.name}
                 </h3>
-                <p className="text-mauve font-bold text-lg mb-4 font-body">{relatedProduct.price}</p>
                 <div className="flex items-center gap-3">
                   <Link to={`/product/${relatedProduct.slug}`} className="clay-button text-xs tracking-widest uppercase flex items-center gap-2">
                     View Product

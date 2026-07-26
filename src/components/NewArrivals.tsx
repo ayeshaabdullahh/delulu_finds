@@ -99,8 +99,7 @@ export default function NewArrivals() {
                 <Link to={`/product/${product.slug}`} className="font-display text-xs font-medium text-charcoal hover:text-mauve transition-colors line-clamp-1 block">
                   {product.name}
                 </Link>
-                <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-mauve font-bold text-xs font-body">{product.price}</span>
+                <div className="flex items-center justify-end mt-1.5">
                   <a
                     href={product.affiliate_url}
                     target="_blank"
