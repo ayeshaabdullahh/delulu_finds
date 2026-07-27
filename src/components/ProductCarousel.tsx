@@ -14,7 +14,7 @@ export default function ProductCarousel() {
   const lastTime = useRef(0);
 
   useEffect(() => {
-    getProducts({ featured: true, limit: 8 }).then(setProducts).catch(() => {});
+    getProducts({ latest: true, limit: 8 }).then(setProducts).catch(() => {});
   }, []);
 
   const ITEM_COUNT = products.length || 1;

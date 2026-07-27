@@ -47,6 +47,7 @@ export async function getProducts(options?: {
   category?: string;
   featured?: boolean;
   newArrival?: boolean;
+  latest?: boolean;
   search?: string;
   limit?: number;
   offset?: number;
@@ -54,7 +55,9 @@ export async function getProducts(options?: {
   let query = supabase
     .from('products')
     .select('*');
-  if (options?.newArrival) {
+  if (options?.latest) {
+    query = query.order('created_at', { ascending: false });
+  } else if (options?.newArrival) {
     query = query.order('created_at', { ascending: false });
   } else {
     query = query
