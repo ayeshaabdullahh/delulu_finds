@@ -16,23 +16,23 @@ const serializers = {
     },
   },
   block: {
-    h2: ({ children }: any) => <h2 className="font-display text-2xl sm:text-3xl font-semibold text-charcoal mt-10 mb-4 leading-tight">{children}</h2>,
-    h3: ({ children }: any) => <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mt-8 mb-3 leading-tight">{children}</h3>,
+    h2: ({ children }: any) => <h2 className="font-display text-2xl sm:text-3xl font-semibold text-black mt-10 mb-4 leading-tight">{children}</h2>,
+    h3: ({ children }: any) => <h3 className="font-display text-xl sm:text-2xl font-semibold text-black mt-8 mb-3 leading-tight">{children}</h3>,
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-2 border-mauve/40 pl-6 my-6 italic font-display text-lg text-charcoal/80">{children}</blockquote>
+      <blockquote className="border-l-2 border-mauve/40 pl-6 my-6 italic font-display text-lg text-black">{children}</blockquote>
     ),
-    normal: ({ children }: any) => <p className="text-charcoal/80 text-base leading-relaxed mb-5 font-body">{children}</p>,
+    normal: ({ children }: any) => <p className="text-black text-base leading-relaxed mb-5 font-body">{children}</p>,
   },
   marks: {
     link: ({ children, value }: any) => (
       <a href={value?.href} target="_blank" rel="noopener noreferrer" className="text-mauve underline hover:text-mauve-dark transition-colors">{children}</a>
     ),
-    strong: ({ children }: any) => <strong className="font-semibold text-charcoal">{children}</strong>,
+    strong: ({ children }: any) => <strong className="font-semibold text-black">{children}</strong>,
     em: ({ children }: any) => <em className="italic">{children}</em>,
   },
   list: {
-    bullet: ({ children }: any) => <ul className="list-disc list-inside space-y-2 mb-5 text-charcoal/80 font-body">{children}</ul>,
-    number: ({ children }: any) => <ol className="list-decimal list-inside space-y-2 mb-5 text-charcoal/80 font-body">{children}</ol>,
+    bullet: ({ children }: any) => <ul className="list-disc list-inside space-y-2 mb-5 text-black font-body">{children}</ul>,
+    number: ({ children }: any) => <ol className="list-decimal list-inside space-y-2 mb-5 text-black font-body">{children}</ol>,
   },
 };
 

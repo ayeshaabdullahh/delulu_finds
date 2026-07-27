@@ -23,7 +23,7 @@ export type BlogPost = {
   category: string;
   excerpt: string;
   content: any[];
-  relatedProductSlug: string | null;
+  relatedProductSlugs: string[];
   publishedAt: string;
 };
 
@@ -35,7 +35,7 @@ const postFields = `
   category,
   excerpt,
   content,
-  "relatedProductSlug": relatedProductSlug.current,
+  relatedProductSlugs,
   publishedAt
 `;
 
@@ -70,7 +70,7 @@ export async function getRecentPosts(limit = 3): Promise<BlogPost[]> {
 
 export async function getPostByProductSlug(productSlug: string): Promise<BlogPost | null> {
   const post = await sanityClient.fetch(
-    `*[_type == "blogPost" && relatedProductSlug.current == $productSlug][0] {
+    `*[_type == "blogPost" && defined(publishedAt) && $productSlug in relatedProductSlugs][0] {
       ${postFields}
     }`,
     { productSlug }

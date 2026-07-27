@@ -96,6 +96,16 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return data as Product | null;
 }
 
+export async function getProductsBySlugs(slugs: string[]): Promise<Product[]> {
+  if (!slugs.length) return [];
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .in('slug', slugs);
+  if (error) throw error;
+  return (data || []) as Product[];
+}
+
 export async function getRelatedProducts(productId: string, category: string): Promise<Product[]> {
   const { data, error } = await supabase
     .from('products')

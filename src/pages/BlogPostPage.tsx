@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronRight, ArrowLeft, ExternalLink } from 'lucide-react';
 import { getPostBySlug, urlFor, BlogPost } from '../lib/sanity';
-import { Product, getProductBySlug } from '../lib/supabase';
+import { Product, getProductsBySlugs } from '../lib/supabase';
 import PortableTextRenderer from '../components/PortableTextRenderer';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<BlogPost | null>(null);
-  const [relatedProduct, setRelatedProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -17,14 +17,17 @@ export default function BlogPostPage() {
     window.scrollTo({ top: 0, behavior: 'instant' });
     setLoading(true);
     setError(false);
-    setRelatedProduct(null);
+    setRelatedProducts([]);
     getPostBySlug(slug)
       .then(async (p) => {
         setPost(p);
-        if (p?.relatedProductSlug) {
+        if (p?.relatedProductSlugs?.length) {
           try {
-            const product = await getProductBySlug(p.relatedProductSlug);
-            setRelatedProduct(product);
+            const products = await getProductsBySlugs(p.relatedProductSlugs);
+            const ordered = p.relatedProductSlugs
+              .map((s) => products.find((prod) => prod.slug === s))
+              .filter((prod): prod is Product => !!prod);
+            setRelatedProducts(ordered);
           } catch { /* ignore */ }
         }
       })
@@ -53,12 +56,7 @@ export default function BlogPostPage() {
 
   const coverUrl = post.coverImage ? urlFor(post.coverImage).width(1600).url() : '';
   const date = new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  // Split content to insert product card after intro paragraph
-  const introParagraph = post.content?.find((block: any) => block._type === 'block' && block.style === 'normal');
-  const introIndex = post.content?.indexOf(introParagraph) ?? -1;
-  const beforeProduct = introIndex >= 0 ? post.content.slice(0, introIndex + 1) : post.content;
-  const afterProduct = introIndex >= 0 ? post.content.slice(introIndex + 1) : [];
+  const numbered = relatedProducts.length > 1;
 
   return (
     <div className="pt-24 pb-24 sm:pb-8 min-h-screen" style={{ background: '#FFF8F5' }}>
@@ -101,51 +99,65 @@ export default function BlogPostPage() {
           </p>
         )}
 
-        {/* Content before product card */}
+        {/* General intro content */}
         <div className="prose prose-lg max-w-none">
-          <PortableTextRenderer content={beforeProduct} />
+          <PortableTextRenderer content={post.content} />
         </div>
 
-        {/* Shop The Look card */}
-        {relatedProduct && (
-          <div className="my-10">
-            <div className="glass-card rounded-3xl overflow-hidden grid sm:grid-cols-2 gap-0">
-              <div className="relative h-56 sm:h-full overflow-hidden min-h-[240px]">
-                <img
-                  src={relatedProduct.image_url}
-                  alt={relatedProduct.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-mauve font-bold mb-3 font-body">Shop The Look</span>
-                <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mb-4 leading-tight">
-                  {relatedProduct.name}
-                </h3>
-                <div className="flex items-center gap-3">
-                  <Link to={`/product/${relatedProduct.slug}`} className="clay-button text-xs tracking-widest uppercase flex items-center gap-2">
-                    View Product
-                    <ExternalLink size={12} />
-                  </Link>
-                  <a
-                    href={relatedProduct.affiliate_url}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    className="clay-button-outline text-xs tracking-widest uppercase"
-                  >
-                    Shop Now
-                  </a>
+        {/* Roundup sections — one per related product */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-16 space-y-16">
+            {relatedProducts.map((product, idx) => (
+              <section key={product.id} className="relative">
+                {/* Numbered marker */}
+                {numbered && (
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="font-display text-5xl sm:text-6xl font-semibold text-mauve/30 leading-none">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <div className="h-px flex-1 bg-mauve/15" />
+                  </div>
+                )}
+
+                <div className="glass-card rounded-3xl overflow-hidden grid sm:grid-cols-2 gap-0">
+                  <div className="relative h-64 sm:h-full overflow-hidden min-h-[260px]">
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-6 sm:p-8 flex flex-col justify-center">
+                    <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mb-3 leading-tight">
+                      {product.name}
+                    </h3>
+                    <p className="text-black/70 text-sm leading-relaxed mb-6 font-body line-clamp-4">
+                      {product.description || 'A curated find from our favorite collection.'}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <Link
+                        to={`/product/${product.slug}`}
+                        className="clay-button text-xs tracking-widest uppercase flex items-center gap-2"
+                      >
+                        Shop This Look
+                        <ExternalLink size={12} />
+                      </Link>
+                      <a
+                        href={product.affiliate_url}
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                        className="clay-button-outline text-xs tracking-widest uppercase"
+                      >
+                        Shop Now
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </section>
+            ))}
           </div>
         )}
-
-        {/* Content after product card */}
-        <div className="prose prose-lg max-w-none">
-          <PortableTextRenderer content={afterProduct} />
-        </div>
 
         {/* Back link */}
         <div className="mt-16 pt-8 border-t border-mauve/10 text-center">
