@@ -4,6 +4,7 @@ import { ChevronRight, ArrowLeft, ExternalLink } from 'lucide-react';
 import { getPostBySlug, urlFor, BlogPost } from '../lib/sanity';
 import { Product, getProductsBySlugs } from '../lib/supabase';
 import PortableTextRenderer from '../components/PortableTextRenderer';
+import ExpandableDescription from '../components/ExpandableDescription';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -132,9 +133,11 @@ export default function BlogPostPage() {
                     <h3 className="font-display text-xl sm:text-2xl font-semibold text-charcoal mb-3 leading-tight">
                       {product.name}
                     </h3>
-                    <p className="text-black/70 text-sm leading-relaxed mb-6 font-body line-clamp-4">
-                      {product.description || 'A curated find from our favorite collection.'}
-                    </p>
+                    <ExpandableDescription
+                      text={product.description || 'A curated find from our favorite collection.'}
+                      className="text-black/70 text-sm mb-6"
+                      collapsedLines={3}
+                    />
                     <div className="flex items-center gap-3">
                       <Link
                         to={`/product/${product.slug}`}

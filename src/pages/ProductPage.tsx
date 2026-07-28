@@ -4,6 +4,7 @@ import { ExternalLink, Heart, ChevronRight, ArrowRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
 import { useSavedItems } from '../hooks/useSavedItems';
 import { getPostByProductSlug, urlFor, BlogPost } from '../lib/sanity';
+import ExpandableDescription from '../components/ExpandableDescription';
 
 const sourceBadgeClass = (source: string) => {
   const s = source.toLowerCase();
@@ -103,9 +104,11 @@ export default function ProductPage() {
               {product.name}
             </h1>
 
-            <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6 font-body">
-              {product.description || 'A curated find from our favorite collection. Click through to shop this look directly from the source.'}
-            </p>
+            <ExpandableDescription
+              text={product.description || 'A curated find from our favorite collection. Click through to shop this look directly from the source.'}
+              className="text-gray-700 text-sm sm:text-base mb-6"
+              collapsedLines={3}
+            />
 
             <div className="glass-card rounded-xl p-3 mb-6 inline-flex items-center gap-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-blush-300"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.084.345-.091.375-.293 1.199-.334 1.363-.053.225-.177.272-.407.163-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.488 3.146C9.04 23.843 10.48 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
