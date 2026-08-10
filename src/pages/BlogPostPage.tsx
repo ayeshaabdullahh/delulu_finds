@@ -143,7 +143,7 @@ export default function BlogPostPage() {
                         to={`/product/${product.slug}`}
                         className="clay-button text-xs tracking-widest uppercase flex items-center gap-2"
                       >
-                        View Details
+                        Shop This Look
                         <ExternalLink size={12} />
                       </Link>
                       <a
