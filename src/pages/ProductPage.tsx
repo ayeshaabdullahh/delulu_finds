@@ -80,7 +80,7 @@ export default function ProductPage() {
               <img
                 src={product.image_url}
                 alt={product.name}
-                className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
+                className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-contain transition-transform duration-700 group-hover:scale-105 cursor-pointer"
               />
             </a>
             <span className={`absolute top-4 left-4 source-badge ${sourceBadgeClass(product.source)}`}>
@@ -195,7 +195,7 @@ export default function ProductPage() {
                     rel="noopener noreferrer sponsored"
                     className="block h-40 overflow-hidden"
                   >
-                    <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+                    <img src={p.image_url} alt={p.name} className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110" loading="lazy" />
                   </a>
                   <Link to={`/product/${p.slug}`} className="block p-3">
                     <h3 className="font-display text-xs font-medium text-charcoal line-clamp-1">{p.name}</h3>

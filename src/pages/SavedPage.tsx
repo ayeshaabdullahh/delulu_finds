@@ -73,7 +73,7 @@ export default function SavedPage() {
               <div key={item.id} className="glass-card glass-card-hover rounded-2xl overflow-hidden group">
                 <div className="relative h-64 overflow-hidden">
                   <Link to={`/product/${item.product.slug}`}>
-                    <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                    <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                   </Link>
                   <span className={`absolute top-3 left-3 source-badge ${sourceBadgeClass(item.product.source)}`}>{sourceLabel(item.product.source)}</span>
                   <button
