@@ -125,7 +125,7 @@ export default function BlogPostPage() {
                     <img
                       src={product.image_url}
                       alt={product.name}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-cover"
                       loading="lazy"
                     />
                   </div>
