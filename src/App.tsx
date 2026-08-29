@@ -35,6 +35,10 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/about" element={<AboutPage />} />
+<Route path="/contact" element={<ContactPage />} />
+<Route path="/disclosure" element={<DisclosurePage />} />
+<Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
         <Footer />
       </div>
