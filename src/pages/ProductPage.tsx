@@ -36,10 +36,36 @@ export default function ProductPage() {
           getPostByProductSlug(p.slug)
             .then(setBlogPost)
             .catch(() => {});
+
+          const desc = (p.description || 'A curated fashion find from Delulu Finds.').slice(0, 160);
+          document.title = `${p.name} | Delulu Finds`;
+          const setMeta = (selector: string, attr: string, value: string) => {
+            let el = document.head.querySelector(selector) as HTMLMetaElement | null;
+            if (!el) {
+              el = document.createElement('meta');
+              const [, prop, name] = selector.match(/\[(property|name)="([^"]+)"\]/) || [];
+              if (prop) el.setAttribute('property', name);
+              else if (attr === 'name') el.setAttribute('name', name);
+              document.head.appendChild(el);
+            }
+            el.setAttribute(attr, value);
+          };
+          setMeta('meta[property="og:title"]', 'content', p.name);
+          setMeta('meta[property="og:description"]', 'content', desc);
+          setMeta('meta[property="og:image"]', 'content', p.image_url);
+          setMeta('meta[property="og:url"]', 'content', window.location.href);
+          setMeta('meta[property="og:type"]', 'content', 'product');
+          setMeta('meta[name="description"]', 'content', desc);
+          setMeta('meta[name="twitter:title"]', 'content', p.name);
+          setMeta('meta[name="twitter:description"]', 'content', desc);
+          setMeta('meta[name="twitter:image"]', 'content', p.image_url);
         }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+    return () => {
+      document.title = 'Delulu Finds | Gen Z Fashion Affiliate | @TheDeluluDrip';
+    };
   }, [slug]);
 
   if (loading) {
