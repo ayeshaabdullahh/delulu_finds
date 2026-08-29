@@ -64,5 +64,6 @@ export default async function handler(req, res) {
     '\n</urlset>';
 
   res.setHeader('Content-Type', 'application/xml');
+  res.setHeader('Cache-Control', 'public, s-maxage=7200, stale-while-revalidate');
   res.status(200).send(xml);
 }
