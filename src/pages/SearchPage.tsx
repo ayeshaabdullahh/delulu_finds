@@ -2,39 +2,24 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Heart, ExternalLink, Search } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
+import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
-
-const sourceBadgeClass = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'source-awn';
-  if (s.includes('impact')) return 'source-imp';
-  if (s.includes('mavrly')) return 'source-mvr';
-  if (s.includes('daraz')) return 'source-drz';
-  return 'source-drz';
-};
-
-const sourceLabel = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'AWN';
-  if (s.includes('impact')) return 'IMP';
-  if (s.includes('mavrly')) return 'MVR';
-  if (s.includes('daraz')) return 'DRZ';
-  return source;
-};
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
     if (!query) { setProducts([]); return; }
     setLoading(true);
+    setError('');
     getProducts({ search: query })
       .then(setProducts)
-      .catch(() => {})
+      .catch(() => setError('Search failed. Please try again.'))
       .finally(() => setLoading(false));
   }, [query]);
 
@@ -49,10 +34,15 @@ export default function SearchPage() {
               Results for "<span className="text-gradient">{query}</span>"
             </h1>
           </div>
-          <p className="text-gray-400 text-sm font-body">{products.length} finds</p>
+          <p className="text-muted text-sm font-body">{products.length} finds</p>
         </div>
 
-        {loading ? (
+        {error ? (
+          <div className="text-center py-16">
+            <p className="text-red-400 text-sm font-body mb-4">{error}</p>
+            <Link to="/explore" className="clay-button text-xs tracking-widest uppercase">Browse All Finds</Link>
+          </div>
+        ) : loading ? (
           <div className="text-center py-16">
             <div className="w-8 h-8 border-2 border-blush-200 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-300 text-sm font-body">Searching...</p>

@@ -2,15 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pencil, Trash2, Search, ExternalLink, Eye, Star, ArrowUpDown } from 'lucide-react';
 import { Product } from '../../lib/supabase';
-
-const sourceBadge = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return { label: 'AWN', className: 'source-awn' };
-  if (s.includes('impact')) return { label: 'IMP', className: 'source-imp' };
-  if (s.includes('mavrly')) return { label: 'MVR', className: 'source-mvr' };
-  if (s.includes('daraz')) return { label: 'DRZ', className: 'source-drz' };
-  return { label: source, className: 'source-drz' };
-};
+import { parsePrice } from '../../lib/format';
+import { sourceLabel } from '../../lib/sources';
 
 interface ProductTableProps {
   products: Product[];
@@ -40,7 +33,7 @@ export default function ProductTable({ products, onEdit, onDelete }: ProductTabl
     .sort((a, b) => {
       let cmp = 0;
       if (sortKey === 'price') {
-        cmp = parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, ''));
+        cmp = parsePrice(a.price) - parsePrice(b.price);
       } else if (sortKey === 'created_at') {
         cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       } else {
@@ -136,7 +129,7 @@ export default function ProductTable({ products, onEdit, onDelete }: ProductTabl
                   </div>
                 </td>
                 <td className="p-3 sm:p-4">
-                  <span className={`source-badge ${sourceBadge(p.source).className}`}>{sourceBadge(p.source).label}</span>
+                  <span className="source-badge source-drz">{sourceLabel(p.source)}</span>
                 </td>
                 <td className="p-3 sm:p-4 text-xs text-gray-500 font-body">{p.category}</td>
                 <td className="p-3 sm:p-4">

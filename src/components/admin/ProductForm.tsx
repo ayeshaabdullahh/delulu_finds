@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Image, Link as LinkIcon } from 'lucide-react';
-import { Product, supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase';
 
 const categories = ['Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 const sources = ['AWIN', 'Impact', 'Mavrly', 'Daraz'];
@@ -70,8 +70,8 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
         if (error) throw error;
       }
       onSaved();
-    } catch (err: any) {
-      setError(err.message || 'Save failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Save failed');
     }
     setSaving(false);
   };
@@ -90,52 +90,52 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
 
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Name *</label>
-            <input type="text" value={form.name} onChange={(e) => handleNameChange(e.target.value)} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="e.g. Rose Silk Camisole" />
+            <label htmlFor="product-name" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Name *</label>
+            <input id="product-name" type="text" value={form.name} onChange={(e) => handleNameChange(e.target.value)} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="e.g. Rose Silk Camisole" />
           </div>
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Slug</label>
-            <input type="text" value={form.slug} onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" />
+            <label htmlFor="product-slug" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Slug</label>
+            <input id="product-slug" type="text" value={form.slug} onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" />
           </div>
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Description</label>
-            <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all resize-none" placeholder="Describe this find..." />
+            <label htmlFor="product-description" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Description</label>
+            <textarea id="product-description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all resize-none" placeholder="Describe this find..." />
           </div>
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">
+            <label htmlFor="product-image" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">
               <Image size={10} className="inline mr-1" /> Image URL *
             </label>
-            <input type="url" value={form.image_url} onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="https://..." />
+            <input id="product-image" type="url" value={form.image_url} onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="https://..." />
             {form.image_url && (
-              <img src={form.image_url} alt="Preview" className="mt-2 w-full h-32 object-cover rounded-xl" />
+              <img src={form.image_url} alt="Product preview" className="mt-2 w-full h-32 object-cover rounded-xl" />
             )}
           </div>
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">
+            <label htmlFor="product-affiliate" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">
               <LinkIcon size={10} className="inline mr-1" /> Affiliate URL *
             </label>
-            <input type="url" value={form.affiliate_url} onChange={(e) => setForm((f) => ({ ...f, affiliate_url: e.target.value }))} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="https://amazon.com/dp/..." />
+            <input id="product-affiliate" type="url" value={form.affiliate_url} onChange={(e) => setForm((f) => ({ ...f, affiliate_url: e.target.value }))} required className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" placeholder="https://amazon.com/dp/..." />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Price *</label>
-              <input type="text" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))} required placeholder="$49" className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" />
+              <label htmlFor="product-price" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Price *</label>
+              <input id="product-price" type="text" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))} required placeholder="$49" className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" />
             </div>
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Original Price</label>
-              <input type="text" value={form.original_price} onChange={(e) => setForm((f) => ({ ...f, original_price: e.target.value }))} placeholder="$79" className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" />
+              <label htmlFor="product-original-price" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Original Price</label>
+              <input id="product-original-price" type="text" value={form.original_price} onChange={(e) => setForm((f) => ({ ...f, original_price: e.target.value }))} placeholder="$79" className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Source</label>
-              <select value={form.source} onChange={(e) => setForm((f) => ({ ...f, source: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70">
+              <label htmlFor="product-source" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Source</label>
+              <select id="product-source" value={form.source} onChange={(e) => setForm((f) => ({ ...f, source: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70">
                 {sources.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Category</label>
-              <select value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70">
+              <label htmlFor="product-category" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Category</label>
+              <select id="product-category" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70">
                 {categories.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>

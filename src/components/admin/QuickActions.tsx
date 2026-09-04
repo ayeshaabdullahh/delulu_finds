@@ -1,4 +1,4 @@
-import { Plus, Upload, BarChart3, Settings, Globe, Image } from 'lucide-react';
+import { Plus, BarChart3, Globe, Image } from 'lucide-react';
 
 interface QuickActionsProps {
   onAddProduct: () => void;

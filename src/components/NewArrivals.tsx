@@ -2,25 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ExternalLink, Heart } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
+import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
-
-const sourceBadgeClass = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'source-awn';
-  if (s.includes('impact')) return 'source-imp';
-  if (s.includes('mavrly')) return 'source-mvr';
-  if (s.includes('daraz')) return 'source-drz';
-  return 'source-drz';
-};
-
-const sourceLabel = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'AWN';
-  if (s.includes('impact')) return 'IMP';
-  if (s.includes('mavrly')) return 'MVR';
-  if (s.includes('daraz')) return 'DRZ';
-  return source;
-};
 
 export default function NewArrivals() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,7 +11,7 @@ export default function NewArrivals() {
   const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
-    getProducts({ newArrival: true, limit: 12 }).then(setProducts).catch(() => {});
+    getProducts({ newArrival: true, limit: 12 }).then(setProducts).catch(() => console.error('Failed to load new arrivals'));
   }, []);
 
   const scroll = (dir: 'left' | 'right') => {

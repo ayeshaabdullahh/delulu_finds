@@ -2,35 +2,22 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ExternalLink, Trash2 } from 'lucide-react';
 import { Product, SavedItem, getSavedProducts, unsaveProduct } from '../lib/supabase';
-
-const sourceBadgeClass = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'source-awn';
-  if (s.includes('impact')) return 'source-imp';
-  if (s.includes('mavrly')) return 'source-mvr';
-  if (s.includes('daraz')) return 'source-drz';
-  return 'source-drz';
-};
-
-const sourceLabel = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'AWN';
-  if (s.includes('impact')) return 'IMP';
-  if (s.includes('mavrly')) return 'MVR';
-  if (s.includes('daraz')) return 'DRZ';
-  return source;
-};
+import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 
 export default function SavedPage() {
   const [items, setItems] = useState<(SavedItem & { product: Product })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const refresh = async () => {
     setLoading(true);
+    setError('');
     try {
       const data = await getSavedProducts();
       setItems(data);
-    } catch { /* ignore */ }
+    } catch {
+      setError('Failed to load your saved finds. Please try again.');
+    }
     setLoading(false);
   };
 
@@ -51,12 +38,17 @@ export default function SavedPage() {
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-charcoal mb-4">
             Saved <span className="text-gradient">Finds</span>
           </h1>
-          <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto font-body">
+          <p className="text-muted text-sm sm:text-base max-w-md mx-auto font-body">
             All the pieces you've hearted, ready to shop whenever you're ready
           </p>
         </div>
 
-        {loading ? (
+        {error ? (
+          <div className="text-center py-16">
+            <p className="text-red-400 text-sm font-body mb-4">{error}</p>
+            <button onClick={refresh} className="clay-button text-xs tracking-widest uppercase">Retry</button>
+          </div>
+        ) : loading ? (
           <div className="text-center py-16">
             <div className="w-8 h-8 border-2 border-blush-200 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-300 text-sm font-body">Loading your saved finds...</p>

@@ -128,8 +128,10 @@ export default function Navbar() {
               {/* Search bar - always visible on desktop */}
               <form onSubmit={handleSearch} className="hidden sm:flex items-center">
                 <div className="relative">
+                  <label htmlFor="desktop-search" className="sr-only">Search finds</label>
                   <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
                   <input
+                    id="desktop-search"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -160,8 +162,10 @@ export default function Navbar() {
           <div className="bg-dark px-4 pb-4 animate-slide-up sm:hidden border-t border-mauve/10">
             <form onSubmit={handleSearch} className="max-w-xl mx-auto">
               <div className="relative">
+                <label htmlFor="mobile-search" className="sr-only">Search finds</label>
                 <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
                 <input
+                  id="mobile-search"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

@@ -2,18 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ExternalLink, Heart, ChevronRight, ArrowRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
+import { sourceBadgeClass } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
-import { getPostByProductSlug, urlFor, BlogPost } from '../lib/sanity';
+import { getPostByProductSlug, getPostSlug, urlFor, BlogPost } from '../lib/sanity';
 import ExpandableDescription from '../components/ExpandableDescription';
-
-const sourceBadgeClass = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'source-awn';
-  if (s.includes('impact')) return 'source-imp';
-  if (s.includes('mavrly')) return 'source-mvr';
-  if (s.includes('daraz')) return 'source-drz';
-  return 'source-drz';
-};
 
 export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -21,6 +13,7 @@ export default function ProductPage() {
   const [related, setRelated] = useState<Product[]>([]);
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
@@ -28,11 +21,13 @@ export default function ProductPage() {
     window.scrollTo({ top: 0, behavior: 'instant' });
     setLoading(true);
     setBlogPost(null);
+    setProduct(null);
+    setError('');
     getProductBySlug(slug)
       .then((p) => {
         setProduct(p);
         if (p) {
-          getRelatedProducts(p.id, p.category).then(setRelated).catch(() => {});
+          getRelatedProducts(p.id, p.category).then(setRelated).catch(() => console.error('Failed to load related products'));
           getPostByProductSlug(p.slug)
             .then(setBlogPost)
             .catch(() => {});
@@ -61,7 +56,7 @@ export default function ProductPage() {
           setMeta('meta[name="twitter:image"]', 'content', p.image_url);
         }
       })
-      .catch(() => {})
+      .catch(() => setError('Failed to load this find. Please try again.'))
       .finally(() => setLoading(false));
     return () => {
       document.title = 'Delulu Finds | Gen Z Fashion Affiliate | @TheDeluluDrip';
@@ -80,7 +75,7 @@ export default function ProductPage() {
     return (
       <div className="pt-24 min-h-screen flex items-center justify-center" style={{ background: '#FFF8F5' }}>
         <div className="text-center">
-          <h2 className="font-display text-2xl font-semibold text-charcoal mb-4">Find Not Found</h2>
+          <h2 className="font-display text-2xl font-semibold text-charcoal mb-4">{error || 'Find Not Found'}</h2>
           <Link to="/explore" className="clay-button text-xs tracking-widest uppercase">Browse All Finds</Link>
         </div>
       </div>
@@ -89,13 +84,34 @@ export default function ProductPage() {
 
   const isSaved = savedIds.has(product.id);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description || product.name,
+    image: product.image_url,
+    url: `https://delulufinds.me/product/${product.slug}`,
+    offers: {
+      '@type': 'Offer',
+      price: product.price.replace(/[^0-9.]/g, ''),
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+    },
+    brand: {
+      '@type': 'Brand',
+      name: product.source,
+    },
+    category: product.category,
+  };
+
   return (
     <div className="pt-24 pb-24 sm:pb-8 min-h-screen" style={{ background: '#FFF8F5' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center gap-2 text-xs font-body mb-8">
-          <Link to="/" className="text-gray-400 hover:text-blush-400 transition-colors">Home</Link>
+          <Link to="/" className="text-muted hover:text-blush-400 transition-colors">Home</Link>
           <ChevronRight size={12} className="text-gray-300" />
-          <Link to="/explore" className="text-gray-400 hover:text-blush-400 transition-colors">Explore</Link>
+          <Link to="/explore" className="text-muted hover:text-blush-400 transition-colors">Explore</Link>
           <ChevronRight size={12} className="text-gray-300" />
           <span className="text-blush-400 font-bold">{product.name}</span>
         </nav>
@@ -163,10 +179,10 @@ export default function ProductPage() {
             </div>
 
             <a
-              href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.href)}&media=${encodeURIComponent(product.image_url)}&description=${encodeURIComponent(product.name)}`}
+              href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(`https://delulufinds.me/product/${product.slug}`)}&media=${encodeURIComponent(product.image_url)}&description=${encodeURIComponent(product.name)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs text-gray-400 hover:text-blush-400 transition-colors font-body"
+              className="inline-flex items-center gap-2 text-xs text-muted hover:text-blush-400 transition-colors font-body"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.084.345-.091.375-.293 1.199-.334 1.363-.053.225-.177.272-.407.163-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.488 3.146C9.04 23.843 10.48 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
               Pin It on Pinterest
@@ -196,7 +212,7 @@ export default function ProductPage() {
                   {blogPost.excerpt}
                 </p>
                 <Link
-                  to={`/blog/${blogPost.slug.current}`}
+                  to={`/blog/${getPostSlug(blogPost)}`}
                   className="inline-flex items-center gap-2 text-mauve font-bold text-xs tracking-widest uppercase font-body hover:gap-3 transition-all"
                 >
                   Read More

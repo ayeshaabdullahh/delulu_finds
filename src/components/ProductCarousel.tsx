@@ -2,19 +2,22 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, RotateCw, ExternalLink } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
+import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 
 export default function ProductCarousel() {
   const [products, setProducts] = useState<Product[]>([]);
   const [rotation, setRotation] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const dragStartX = useRef(0);
   const dragStartRotation = useRef(0);
   const animRef = useRef<number>(0);
   const lastTime = useRef(0);
+  const containerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    getProducts({ latest: true, limit: 8 }).then(setProducts).catch(() => {});
+    getProducts({ latest: true, limit: 8 }).then(setProducts).catch(() => console.error('Failed to load trending products'));
   }, []);
 
   const ITEM_COUNT = products.length || 1;
@@ -25,16 +28,27 @@ export default function ProductCarousel() {
     if (lastTime.current === 0) lastTime.current = time;
     const delta = time - lastTime.current;
     lastTime.current = time;
-    if (!isHovered && !isDragging) {
+    if (!isHovered && !isDragging && isVisible) {
       setRotation((prev) => prev + delta * 0.012);
     }
     animRef.current = requestAnimationFrame(autoRotate);
-  }, [isHovered, isDragging]);
+  }, [isHovered, isDragging, isVisible]);
 
   useEffect(() => {
     animRef.current = requestAnimationFrame(autoRotate);
     return () => cancelAnimationFrame(animRef.current);
   }, [autoRotate]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     setIsDragging(true);
@@ -55,28 +69,10 @@ export default function ProductCarousel() {
     setRotation((prev) => prev + (dir === 'next' ? -ANGLE_STEP : ANGLE_STEP));
   };
 
-  const sourceBadgeClass = (source: string) => {
-    const s = source.toLowerCase();
-    if (s.includes('awin')) return 'source-awn';
-    if (s.includes('impact')) return 'source-imp';
-    if (s.includes('mavrly')) return 'source-mvr';
-    if (s.includes('daraz')) return 'source-drz';
-    return 'source-drz';
-  };
-
-  const sourceLabel = (source: string) => {
-    const s = source.toLowerCase();
-    if (s.includes('awin')) return 'AWN';
-    if (s.includes('impact')) return 'IMP';
-    if (s.includes('mavrly')) return 'MVR';
-    if (s.includes('daraz')) return 'DRZ';
-    return source;
-  };
-
   if (products.length === 0) return null;
 
   return (
-    <section className="relative py-20 sm:py-28 overflow-hidden bg-white" id="trending">
+    <section className="relative py-20 sm:py-28 overflow-hidden bg-white" id="trending" ref={containerRef} aria-label="Trending products carousel">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-mauve/10 blur-3xl" />
         <div className="absolute top-1/3 left-1/3 w-80 h-80 rounded-full bg-charcoal/5 blur-3xl" />
@@ -107,13 +103,22 @@ export default function ProductCarousel() {
 
           {/* Carousel */}
           <div
-            className="carousel-container relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Trending finds"
+            tabIndex={0}
+            aria-live="off"
+            className="carousel-container relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing focus:outline-none"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => { setIsHovered(false); setIsDragging(false); }}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowLeft') goTo('prev');
+              if (e.key === 'ArrowRight') goTo('next');
+            }}
           >
             <div
               className="relative w-[220px] h-[300px]"

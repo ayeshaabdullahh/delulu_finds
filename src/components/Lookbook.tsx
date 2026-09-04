@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Play, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
+
+const FALLBACK_IMG = '/image.png';
 
 export default function Lookbook() {
   return (
@@ -15,23 +17,18 @@ export default function Lookbook() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
                 <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up">
-                  <img src="https://images.pexels.com/photos/985635/pexels-photo-985635.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Lookbook 1" className="w-full h-64 object-cover" loading="lazy" />
+                  <img src="https://images.pexels.com/photos/985635/pexels-photo-985635.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Stylish woman in a fashionable coat" className="w-full h-64 object-cover" loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_IMG; }} />
                 </div>
                 <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  <img src="https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Lookbook 2" className="w-full h-48 object-cover" loading="lazy" />
+                  <img src="https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Modern street style outfit" className="w-full h-48 object-cover" loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_IMG; }} />
                 </div>
               </div>
               <div className="space-y-4 pt-8">
                 <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                  <img src="https://images.pexels.com/photos/6765028/pexels-photo-6765028.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Lookbook 3" className="w-full h-48 object-cover" loading="lazy" />
+                  <img src="https://images.pexels.com/photos/6765028/pexels-photo-6765028.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Chic casual fashion look" className="w-full h-48 object-cover" loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_IMG; }} />
                 </div>
-                <div className="glass-card rounded-2xl overflow-hidden relative group animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                  <img src="https://images.pexels.com/photos/6764849/pexels-photo-6764849.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Lookbook video" className="w-full h-64 object-cover" loading="lazy" />
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/30 transition-colors">
-                    <button className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all shadow-lg group-hover:scale-110">
-                      <Play size={20} className="text-mauve ml-0.5" fill="currentColor" />
-                    </button>
-                  </div>
+                <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                  <img src="https://images.pexels.com/photos/6764849/pexels-photo-6764849.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Styling inspiration outfit" className="w-full h-64 object-cover" loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_IMG; }} />
                 </div>
               </div>
             </div>

@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowDown, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 function FloatingBow({ className, delay = 0 }: { className?: string; delay?: number }) {
   return (
@@ -22,6 +24,22 @@ function FloatingSparkle({ className, delay = 0 }: { className?: string; delay?:
 }
 
 export default function Hero() {
+  const [productCount, setProductCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { count } = await supabase
+          .from('products')
+          .select('id', { count: 'exact', head: true });
+        setProductCount(count ?? null);
+      } catch {
+        setProductCount(null);
+      }
+    })();
+  }, []);
+
+  const findCount = productCount !== null && productCount > 0 ? `${productCount}+` : null;
   return (
     <section
       className="relative min-h-screen flex items-center overflow-hidden pt-20"
@@ -129,7 +147,7 @@ export default function Hero() {
             {/* Stats */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 sm:gap-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
               <div className="flex items-center gap-2">
-                <span className="text-charcoal font-bold text-lg">200+</span>
+                <span className="text-charcoal font-bold text-lg">{findCount ?? '200+'}</span>
                 <span className="text-muted text-sm">Curated Finds</span>
               </div>
               <div className="w-px h-6 bg-charcoal/20 hidden sm:block" />

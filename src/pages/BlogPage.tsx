@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllPosts, urlFor, BlogPost } from '../lib/sanity';
+import { getAllPosts, getPostSlug, urlFor, BlogPost } from '../lib/sanity';
 import BlogCard from '../components/BlogCard';
 
 export default function BlogPage() {
@@ -54,7 +54,7 @@ export default function BlogPage() {
           <>
             {/* Featured post */}
             {featured && (
-              <Link to={`/blog/${featured.slug.current}`} className="group block mb-16">
+              <Link to={`/blog/${getPostSlug(featured)}`} className="group block mb-16">
                 <div className="glass-card glass-card-hover rounded-3xl overflow-hidden grid lg:grid-cols-2 gap-0">
                   <div className="relative h-72 sm:h-96 lg:h-full overflow-hidden min-h-[320px]">
                     <img
@@ -75,7 +75,7 @@ export default function BlogPage() {
                       {featured.excerpt}
                     </p>
                     <div className="flex items-center gap-3">
-                      <span className="text-muted/60 text-xs font-body">{featuredDate}</span>
+                      <span className="text-muted text-xs font-body">{featuredDate}</span>
                       <span className="text-mauve font-bold text-xs tracking-wider uppercase font-body group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                         Read Story →
                       </span>

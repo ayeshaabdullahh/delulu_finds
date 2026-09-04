@@ -2,25 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ExternalLink } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
+import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
-
-const sourceBadgeClass = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'source-awn';
-  if (s.includes('impact')) return 'source-imp';
-  if (s.includes('mavrly')) return 'source-mvr';
-  if (s.includes('daraz')) return 'source-drz';
-  return 'source-drz';
-};
-
-const sourceLabel = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'AWN';
-  if (s.includes('impact')) return 'IMP';
-  if (s.includes('mavrly')) return 'MVR';
-  if (s.includes('daraz')) return 'DRZ';
-  return source;
-};
 
 function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isSaved: boolean; onToggleSave: (id: string) => void }) {
   const [bouncing, setBouncing] = useState(false);
@@ -103,7 +86,7 @@ export default function MasonryGrid() {
   const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
-    getProducts({ category: category === 'All' ? undefined : category }).then(setProducts).catch(() => {});
+    getProducts({ category: category === 'All' ? undefined : category, limit: 24 }).then(setProducts).catch(() => console.error('Failed to fetch curated products'));
   }, [category]);
 
   const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];

@@ -2,25 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Heart, ExternalLink, SlidersHorizontal } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
+import { parsePrice } from '../lib/format';
+import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
-
-const sourceBadgeClass = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'source-awn';
-  if (s.includes('impact')) return 'source-imp';
-  if (s.includes('mavrly')) return 'source-mvr';
-  if (s.includes('daraz')) return 'source-drz';
-  return 'source-drz';
-};
-
-const sourceLabel = (source: string) => {
-  const s = source.toLowerCase();
-  if (s.includes('awin')) return 'AWN';
-  if (s.includes('impact')) return 'IMP';
-  if (s.includes('mavrly')) return 'MVR';
-  if (s.includes('daraz')) return 'DRZ';
-  return source;
-};
 
 const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 const vibes = ['All', '#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
@@ -35,6 +19,7 @@ export default function ExplorePage() {
   const [priceRange, setPriceRange] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [error, setError] = useState('');
   const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
@@ -46,6 +31,7 @@ export default function ExplorePage() {
 
   useEffect(() => {
     setLoading(true);
+    setError('');
     getProducts({ category: category === 'All' ? undefined : category })
       .then((data) => {
         let filtered = data;
@@ -56,8 +42,8 @@ export default function ExplorePage() {
 
         if (priceRange !== 'All') {
           filtered = filtered.filter((p) => {
-            const price = parseFloat(p.price.replace(/[^0-9.]/g, ''));
-            if (isNaN(price)) return true;
+            const price = parsePrice(p.price);
+            if (price <= 0) return true;
             if (priceRange === 'Under $10') return price < 10;
             if (priceRange === 'Under $25') return price < 25;
             if (priceRange === 'Under $50') return price < 50;
@@ -68,7 +54,7 @@ export default function ExplorePage() {
 
         setProducts(filtered);
       })
-      .catch(() => {})
+      .catch(() => setError('Failed to load finds. Please try again.'))
       .finally(() => setLoading(false));
   }, [category, vibe, priceRange, searchParams]);
 
@@ -103,7 +89,7 @@ export default function ExplorePage() {
             <SlidersHorizontal size={14} />
             Filters
           </button>
-          <span className="text-gray-400 text-xs font-body">{products.length} finds</span>
+          <p className="text-muted text-xs font-body">{products.length} finds</p>
         </div>
 
         {/* Filters */}
@@ -161,7 +147,12 @@ export default function ExplorePage() {
         </div>
 
         {/* Grid */}
-        {loading ? (
+        {error ? (
+          <div className="text-center py-16">
+            <p className="text-red-400 text-sm font-body mb-4">{error}</p>
+            <button onClick={() => { setLoading(true); setError(''); getProducts({ category: category === 'All' ? undefined : category }).then(setProducts).catch(() => setError('Failed to load finds. Please try again.')).finally(() => setLoading(false)); }} className="clay-button text-xs tracking-widest uppercase">Retry</button>
+          </div>
+        ) : loading ? (
           <div className="text-center py-16">
             <div className="w-8 h-8 border-2 border-blush-200 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-300 text-sm font-body">Loading finds...</p>

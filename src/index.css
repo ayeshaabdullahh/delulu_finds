@@ -79,6 +79,13 @@
       0 3px 8px rgba(181, 101, 123, 0.2);
   }
 
+  .clay-button:focus-visible,
+  .clay-button-outline:focus-visible {
+    outline: 3px solid #9A4F62;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(181, 101, 123, 0.3);
+  }
+
   .clay-button:active {
     transform: translateY(1px) scale(0.97);
     box-shadow:
@@ -106,6 +113,17 @@
 
   .clay-button-outline:active {
     transform: translateY(1px) scale(0.97);
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  .clay-button:focus-visible,
+  .clay-button-outline:focus-visible {
+    outline: 3px solid #9A4F62;
+    outline-offset: 2px;
   }
 
   .pink-glow {
@@ -160,6 +178,15 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 
   .shimmer-text {

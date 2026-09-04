@@ -33,6 +33,7 @@ export type SavedItem = {
 };
 
 const SESSION_KEY = 'delulu_session_id';
+let sessionInitialized = false;
 
 export function getSessionId(): string {
   let id = localStorage.getItem(SESSION_KEY);
@@ -41,6 +42,13 @@ export function getSessionId(): string {
     localStorage.setItem(SESSION_KEY, id);
   }
   return id;
+}
+
+async function ensureSession(): Promise<void> {
+  if (sessionInitialized) return;
+  const sessionId = getSessionId();
+  const { error } = await supabase.rpc('set_user_session', { session_id: sessionId });
+  if (!error) sessionInitialized = true;
 }
 
 export async function getProducts(options?: {
@@ -75,7 +83,8 @@ export async function getProducts(options?: {
     query = query.eq('is_new_arrival', true);
   }
   if (options?.search) {
-    query = query.or(`name.ilike.%${options.search}%,description.ilike.%${options.search}%,category.ilike.%${options.search}%`);
+    const safeSearch = options.search.replace(/[%_]/g, '\\$&');
+    query = query.or(`name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,category.ilike.%${safeSearch}%`);
   }
   if (options?.limit) {
     query = query.limit(options.limit);
@@ -120,6 +129,7 @@ export async function getRelatedProducts(productId: string, category: string): P
 }
 
 export async function saveProduct(productId: string): Promise<boolean> {
+  await ensureSession();
   const sessionId = getSessionId();
   const { error } = await supabase
     .from('saved_items')
@@ -128,6 +138,7 @@ export async function saveProduct(productId: string): Promise<boolean> {
 }
 
 export async function unsaveProduct(productId: string): Promise<boolean> {
+  await ensureSession();
   const sessionId = getSessionId();
   const { error } = await supabase
     .from('saved_items')
@@ -138,6 +149,7 @@ export async function unsaveProduct(productId: string): Promise<boolean> {
 }
 
 export async function getSavedProductIds(): Promise<string[]> {
+  await ensureSession();
   const sessionId = getSessionId();
   const { data, error } = await supabase
     .from('saved_items')
@@ -148,6 +160,7 @@ export async function getSavedProductIds(): Promise<string[]> {
 }
 
 export async function getSavedProducts(): Promise<(SavedItem & { product: Product })[]> {
+  await ensureSession();
   const sessionId = getSessionId();
   const { data, error } = await supabase
     .from('saved_items')
@@ -158,14 +171,17 @@ export async function getSavedProducts(): Promise<(SavedItem & { product: Produc
   return (data || []) as (SavedItem & { product: Product })[];
 }
 
-export async function isProductSaved(productId: string): Promise<boolean> {
-  const sessionId = getSessionId();
-  const { data, error } = await supabase
-    .from('saved_items')
-    .select('id')
-    .eq('user_session', sessionId)
-    .eq('product_id', productId)
-    .maybeSingle();
-  if (error) return false;
-  return !!data;
+export async function subscribeNewsletter(email: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('newsletter_subscribers')
+    .insert({ email });
+  return !error;
+}
+
+export async function signInAsAdmin(email: string, password: string) {
+  return supabase.auth.signInWithPassword({ email, password });
+}
+
+export async function signOut() {
+  return supabase.auth.signOut();
 }

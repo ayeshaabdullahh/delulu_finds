@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LogOut, Plus, LayoutDashboard, Package, BarChart3, Settings } from 'lucide-react';
-import { Product, getProducts, supabase } from '../lib/supabase';
+import { LogOut, Plus, LayoutDashboard, Package, BarChart3 } from 'lucide-react';
+import { Product, getProducts, supabase, signInAsAdmin, signOut } from '../lib/supabase';
 import DashboardStats from '../components/admin/DashboardStats';
 import CategoryBreakdown from '../components/admin/CategoryBreakdown';
 import SourceBreakdown from '../components/admin/SourceBreakdown';
@@ -10,14 +10,14 @@ import QuickActions from '../components/admin/QuickActions';
 import ProductTable from '../components/admin/ProductTable';
 import ProductFormModal, { ProductForm, emptyForm } from '../components/admin/ProductForm';
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
-
 type Tab = 'overview' | 'products' | 'add';
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [logging, setLogging] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [totalSaved, setTotalSaved] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>('overview');
@@ -25,27 +25,47 @@ export default function AdminPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState<ProductForm>(emptyForm);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setAuthed(true);
+    });
+  }, []);
+
   const loadData = async () => {
     try {
       const data = await getProducts({});
       setProducts(data);
       const { count } = await supabase.from('saved_items').select('*', { count: 'exact', head: true });
       setTotalSaved(count || 0);
-    } catch { /* ignore */ }
+    } catch {
+      console.error('Failed to load admin data');
+    }
   };
 
   useEffect(() => {
     if (authed) loadData();
   }, [authed]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setAuthed(true);
-      setLoginError('');
+    setLogging(true);
+    setLoginError('');
+    const { error } = await signInAsAdmin(email, password);
+    if (error) {
+      setLoginError(error.message === 'Invalid login credentials'
+        ? 'Invalid email or password'
+        : 'Login failed. Please try again.');
+      setLogging(false);
     } else {
-      setLoginError('Wrong password');
+      setAuthed(true);
+      setEmail('');
+      setPassword('');
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    setAuthed(false);
   };
 
   const openNew = () => {
@@ -67,8 +87,12 @@ export default function AdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this product?')) return;
-    await supabase.from('products').delete().eq('id', id);
-    loadData();
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) {
+      console.error('Delete failed:', error.message);
+    } else {
+      loadData();
+    }
   };
 
   const handleFormSaved = () => {
@@ -82,7 +106,6 @@ export default function AdminPage() {
   const featuredCount = products.filter((p) => p.is_featured).length;
   const newArrivalCount = products.filter((p) => p.is_new_arrival).length;
 
-  // Login screen
   if (!authed) {
     return (
       <div className="pt-24 min-h-screen flex items-center justify-center" style={{ background: '#FFF8F5' }}>
@@ -95,15 +118,34 @@ export default function AdminPage() {
             <p className="text-gray-400 text-xs font-body mt-1">Delulu Finds Management</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter admin password"
-              className="w-full px-5 py-3 rounded-full bg-white/60 backdrop-blur-sm border border-blush-100/50 text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all font-body"
-            />
+            <div>
+              <label htmlFor="admin-email" className="sr-only">Email</label>
+              <input
+                id="admin-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Admin email"
+                required
+                className="w-full px-5 py-3 rounded-full bg-white/60 backdrop-blur-sm border border-blush-100/50 text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all font-body"
+              />
+            </div>
+            <div>
+              <label htmlFor="admin-password" className="sr-only">Password</label>
+              <input
+                id="admin-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                className="w-full px-5 py-3 rounded-full bg-white/60 backdrop-blur-sm border border-blush-100/50 text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none focus:border-blush-200/70 focus:ring-2 focus:ring-blush-200/20 transition-all font-body"
+              />
+            </div>
             {loginError && <p className="text-red-400 text-xs text-center font-body">{loginError}</p>}
-            <button type="submit" className="clay-button w-full text-xs tracking-widest uppercase">Login</button>
+            <button type="submit" disabled={logging} className="clay-button w-full text-xs tracking-widest uppercase disabled:opacity-50">
+              {logging ? 'Signing in...' : 'Login'}
+            </button>
           </form>
         </div>
       </div>
@@ -119,7 +161,6 @@ export default function AdminPage() {
   return (
     <div className="pt-24 pb-24 sm:pb-8 min-h-screen" style={{ background: '#FFF8F5' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-semibold text-charcoal flex items-center gap-3">
@@ -132,14 +173,13 @@ export default function AdminPage() {
             <Link to="/" className="clay-button-outline !py-2 !px-4 !text-xs flex items-center gap-2 font-body">
               View Site
             </Link>
-            <button onClick={() => setAuthed(false)} className="clay-button-outline !py-2 !px-4 !text-xs flex items-center gap-2 font-body">
+            <button onClick={handleLogout} className="clay-button-outline !py-2 !px-4 !text-xs flex items-center gap-2 font-body">
               <LogOut size={14} />
               Logout
             </button>
           </div>
         </div>
 
-        {/* Tab navigation */}
         <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
           {tabs.map((tab) => (
             <button
@@ -160,7 +200,6 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {/* Overview tab */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <DashboardStats
@@ -185,7 +224,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Products tab */}
         {activeTab === 'products' && (
           <ProductTable
             products={products}
@@ -195,7 +233,6 @@ export default function AdminPage() {
         )}
       </div>
 
-      {/* Product form modal */}
       {showForm && (
         <ProductFormModal
           editing={editing}

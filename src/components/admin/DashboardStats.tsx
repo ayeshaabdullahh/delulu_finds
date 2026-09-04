@@ -1,4 +1,4 @@
-import { Package, Heart, Tag, TrendingUp, Eye, ShoppingBag, Sparkles, Layers } from 'lucide-react';
+import { Package, Heart, Tag, TrendingUp, Sparkles, Layers } from 'lucide-react';
 
 interface StatCardProps {
   icon: React.ElementType;

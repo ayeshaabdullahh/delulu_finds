@@ -90,7 +90,7 @@ export default function BlogPostPage() {
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-charcoal mb-4 leading-tight">
             {post.title}
           </h1>
-          <p className="text-muted/70 text-xs font-body tracking-wide">{date}</p>
+          <p className="text-muted text-xs font-body tracking-wide">{date}</p>
         </div>
 
         {/* Excerpt as intro */}

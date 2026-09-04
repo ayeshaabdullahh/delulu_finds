@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+import type { PortableTextBlock } from '@portabletext/types';
 
 export const sanityClient = createClient({
   projectId: '84umijys',
@@ -11,7 +12,12 @@ export const sanityClient = createClient({
 
 const builder = imageUrlBuilder(sanityClient);
 
-export function urlFor(source: any) {
+export type SanityImage = {
+  asset: { _ref: string; _type?: string };
+  [key: string]: unknown;
+};
+
+export function urlFor(source: SanityImage) {
   return builder.image(source);
 }
 
@@ -19,13 +25,31 @@ export type BlogPost = {
   _id: string;
   title: string;
   slug: { current: string };
-  coverImage: any;
+  coverImage: SanityImage | null;
   category: string;
   excerpt: string;
-  content: any[];
+  content: PortableTextBlock[];
   relatedProductSlugs: string[];
   publishedAt: string;
 };
+
+// Safely extract a slug string regardless of whether the shape is
+// { current: "x" } or the raw "x". Normalizes to the object form.
+export function getPostSlug(post: Pick<BlogPost, 'slug'>): string {
+  const s = post.slug as unknown;
+  if (typeof s === 'string') return s;
+  if (s && typeof s === 'object' && typeof (s as { current?: unknown }).current === 'string') {
+    return (s as { current: string }).current;
+  }
+  return '';
+}
+
+function normalizeSlug(p: { slug: unknown } & Record<string, unknown>): BlogPost {
+  if (typeof p.slug === 'string') {
+    return { ...p, slug: { current: p.slug } } as unknown as BlogPost;
+  }
+  return p as unknown as BlogPost;
+}
 
 const postFields = `
   _id,
@@ -45,7 +69,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
       ${postFields}
     }`
   );
-  return posts.map((p: any) => ({ ...p, slug: { current: p.slug } }));
+  return posts.map((p: { slug: unknown } & Record<string, unknown>) => normalizeSlug(p));
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
@@ -56,7 +80,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     { slug }
   );
   if (!post) return null;
-  return { ...post, slug: { current: post.slug } };
+  return normalizeSlug(post as { slug: unknown } & Record<string, unknown>);
 }
 
 export async function getRecentPosts(limit = 3): Promise<BlogPost[]> {
@@ -65,7 +89,7 @@ export async function getRecentPosts(limit = 3): Promise<BlogPost[]> {
       ${postFields}
     }`
   );
-  return posts.map((p: any) => ({ ...p, slug: { current: p.slug } }));
+  return posts.map((p: { slug: unknown } & Record<string, unknown>) => normalizeSlug(p));
 }
 
 export async function getPostByProductSlug(productSlug: string): Promise<BlogPost | null> {
@@ -76,5 +100,5 @@ export async function getPostByProductSlug(productSlug: string): Promise<BlogPos
     { productSlug }
   );
   if (!post) return null;
-  return { ...post, slug: { current: post.slug } };
+  return normalizeSlug(post as { slug: unknown } & Record<string, unknown>);
 }

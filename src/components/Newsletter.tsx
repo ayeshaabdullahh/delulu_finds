@@ -1,16 +1,23 @@
 import { useState } from 'react';
 import { Send, Sparkles } from 'lucide-react';
+import { subscribeNewsletter } from '../lib/supabase';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setSubmitted(true);
-      setEmail('');
+    const target = e.target as HTMLFormElement;
+    const emailInput = target.elements.namedItem('email_address') as HTMLInputElement | null;
+    const emailValue = emailInput?.value ?? email;
+
+    // Save a local copy to Supabase (fire-and-forget; never blocks the Kit submit)
+    if (emailValue) {
+      subscribeNewsletter(emailValue).catch(() => {});
     }
+
+    // Let the browser natively submit to ConvertKit so the email is captured there too.
+    // No preventDefault / no await — this guarantees the email reaches Kit.
+    return true;
   };
 
   return (
@@ -37,28 +44,31 @@ export default function Newsletter() {
               Get the best curated finds and sale alerts delivered straight to your inbox. No spam, just the good stuff.
             </p>
 
-            {submitted ? (
-              <div className="bg-mauve/10 rounded-2xl p-6 inline-block border border-mauve/20">
-                <p className="text-mauve font-semibold text-sm font-body">You're in! Check your inbox for today's top finds.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-1 px-5 py-3 rounded-full bg-white/80 border border-charcoal/10 text-sm text-charcoal placeholder:text-muted focus:outline-none focus:border-mauve/50 focus:ring-2 focus:ring-mauve/20 transition-all"
-                  required
-                />
-                <button type="submit" className="clay-button !px-6 flex items-center justify-center gap-2">
-                  <Send size={14} />
-                  <span className="text-xs tracking-wider uppercase">Subscribe</span>
-                </button>
-              </form>
-            )}
+            <form
+              onSubmit={handleSubmit}
+              action="https://app.convertkit.com/forms/3125/subscriptions"
+              method="POST"
+              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+              noValidate
+            >
+              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
+              <input
+                id="newsletter-email"
+                name="email_address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="flex-1 px-5 py-3 rounded-full bg-white/80 border border-charcoal/10 text-sm text-charcoal placeholder:text-muted focus:outline-none focus:border-mauve/50 focus:ring-2 focus:ring-mauve/20 transition-all"
+                required
+              />
+              <button type="submit" className="clay-button !px-6 flex items-center justify-center gap-2">
+                <Send size={14} />
+                <span className="text-xs tracking-wider uppercase">Subscribe</span>
+              </button>
+            </form>
 
-            <p className="text-muted/60 text-[10px] mt-4 tracking-wide font-body">
+            <p className="text-muted text-[11px] mt-4 tracking-wide font-body">
               We only send the best finds. Unsubscribe anytime.
             </p>
           </div>
