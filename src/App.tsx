@@ -9,10 +9,6 @@ import SavedPage from './pages/SavedPage';
 import AdminPage from './pages/AdminPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import DisclosurePage from './pages/DisclosurePage';
-import PrivacyPage from './pages/PrivacyPage';
 
 function RedirectToProduct() {
   const { slug } = useParams();
@@ -35,10 +31,6 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
-          <Route path="/about" element={<AboutPage />} />
-<Route path="/contact" element={<ContactPage />} />
-<Route path="/disclosure" element={<DisclosurePage />} />
-<Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
         <Footer />
       </div>
