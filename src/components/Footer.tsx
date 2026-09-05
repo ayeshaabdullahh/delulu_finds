@@ -34,7 +34,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block mb-4">
               <span className="font-display text-2xl font-bold tracking-wide text-white">
-                DELULU FINDS<span className="text-mauve">.me</span>
+                DELULU FINDS
               </span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mb-6 font-body">
