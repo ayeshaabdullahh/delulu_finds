@@ -2,7 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Heart, ChevronDown } from 'lucide-react';
 
-const categories = ['Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
+const categories = [
+  { label: 'Clothes', value: 'Clothing' },
+  { label: 'Shoes', value: 'Shoes' },
+  { label: 'Bags', value: 'Bags' },
+  { label: 'Beauty', value: 'Beauty' },
+  { label: 'Scarves', value: 'Scarves' },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -45,10 +51,7 @@ export default function Navbar() {
 
   const links = [
     { label: 'Trending', to: '/explore' },
-    { label: 'New Finds', to: '/explore?filter=new' },
-    { label: 'Under $10', to: '/explore?filter=under10' },
     { label: 'Journal', to: '/blog' },
-    { label: 'Lookbook', to: '/#lookbook' },
   ];
 
   return (
@@ -92,11 +95,11 @@ export default function Navbar() {
                   <div className="absolute top-full left-0 mt-2 w-52 bg-dark-light rounded-2xl py-3 shadow-xl animate-slide-up z-50 border border-mauve/20">
                     {categories.map((cat) => (
                       <button
-                        key={cat}
-                        onClick={() => handleCategoryClick(cat)}
+                        key={cat.value}
+                        onClick={() => handleCategoryClick(cat.value)}
                         className="w-full text-left px-4 py-2.5 text-sm font-semibold text-white/70 hover:text-mauve hover:bg-white/5 transition-colors"
                       >
-                        {cat}
+                        {cat.label}
                       </button>
                     ))}
                   </div>
@@ -191,12 +194,12 @@ export default function Navbar() {
               <div className="flex flex-wrap gap-2 px-2 mb-4">
                 {categories.map((cat) => (
                   <Link
-                    key={cat}
-                    to={`/explore?category=${encodeURIComponent(cat)}`}
+                    key={cat.value}
+                    to={`/explore?category=${encodeURIComponent(cat.value)}`}
                     className="text-xs font-semibold text-white/70 hover:text-mauve transition-colors bg-white/5 px-3 py-1.5 rounded-full"
                     onClick={() => setMobileOpen(false)}
                   >
-                    {cat}
+                    {cat.label}
                   </Link>
                 ))}
               </div>

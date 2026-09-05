@@ -6,15 +6,31 @@ import { parsePrice } from '../lib/format';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
 
-const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
-const vibes = ['All', '#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
+const categories = [
+  { label: 'All', value: 'All' },
+  { label: 'Clothes', value: 'Clothing' },
+  { label: 'Shoes', value: 'Shoes' },
+  { label: 'Bags', value: 'Bags' },
+  { label: 'Beauty', value: 'Beauty' },
+  { label: 'Scarves', value: 'Scarves' },
+];
+const vibes = [
+  { label: 'All', value: 'All' },
+  { label: 'Coquette', value: '#CoquetteCore' },
+  { label: 'Y2K', value: '#Y2KVibes' },
+  { label: 'Clean Girl', value: '#CleanGirl' },
+  { label: 'Old Money', value: '#OldMoney' },
+];
 const priceRanges = ['All', 'Under $10', 'Under $25', 'Under $50', '$50+'];
 
 export default function ExplorePage() {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState(searchParams.get('category') || 'All');
+  const [category, setCategory] = useState<string>(() => {
+    const urlCat = searchParams.get('category');
+    return categories.find((c) => c.value === urlCat)?.label ?? 'All';
+  });
   const [vibe, setVibe] = useState('All');
   const [priceRange, setPriceRange] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
@@ -32,12 +48,14 @@ export default function ExplorePage() {
   useEffect(() => {
     setLoading(true);
     setError('');
-    getProducts({ category: category === 'All' ? undefined : category })
+    const activeCategory = categories.find((c) => c.label === category)?.value ?? category;
+    getProducts({ category: activeCategory === 'All' ? undefined : activeCategory })
       .then((data) => {
         let filtered = data;
 
         if (vibe !== 'All') {
-          filtered = filtered.filter((p) => p.aesthetic_tags?.some((t) => t.toLowerCase().includes(vibe.toLowerCase().replace('#', ''))));
+          const vibeValue = vibes.find((v) => v.label === vibe)?.value ?? vibe;
+          filtered = filtered.filter((p) => p.aesthetic_tags?.some((t) => t.toLowerCase().includes(vibeValue.toLowerCase().replace('#', ''))));
         }
 
         if (priceRange !== 'All') {
@@ -100,13 +118,13 @@ export default function ExplorePage() {
               <div className="flex flex-wrap gap-2">
                 {categories.map((cat) => (
                   <button
-                    key={cat}
-                    onClick={() => setCategory(cat)}
+                    key={cat.value}
+                    onClick={() => setCategory(cat.label)}
                     className={`clay-button-outline !py-1.5 !px-4 !text-[11px] font-body ${
-                      category === cat ? 'bg-blush-200/20 border-blush-200/70 text-blush-400' : ''
+                      category === cat.label ? 'bg-blush-200/20 border-blush-200/70 text-blush-400' : ''
                     }`}
                   >
-                    {cat}
+                    {cat.label}
                   </button>
                 ))}
               </div>
@@ -116,13 +134,13 @@ export default function ExplorePage() {
               <div className="flex flex-wrap gap-2">
                 {vibes.map((v) => (
                   <button
-                    key={v}
-                    onClick={() => setVibe(v)}
+                    key={v.value}
+                    onClick={() => setVibe(v.label)}
                     className={`clay-button-outline !py-1.5 !px-4 !text-[11px] font-body ${
-                      vibe === v ? 'bg-lavender-200/20 border-lavender-200/70 text-lavender-400' : ''
+                      vibe === v.label ? 'bg-lavender-200/20 border-lavender-200/70 text-lavender-400' : ''
                     }`}
                   >
-                    {v}
+                    {v.label}
                   </button>
                 ))}
               </div>
@@ -150,7 +168,7 @@ export default function ExplorePage() {
         {error ? (
           <div className="text-center py-16">
             <p className="text-red-400 text-sm font-body mb-4">{error}</p>
-            <button onClick={() => { setLoading(true); setError(''); getProducts({ category: category === 'All' ? undefined : category }).then(setProducts).catch(() => setError('Failed to load finds. Please try again.')).finally(() => setLoading(false)); }} className="clay-button text-xs tracking-widest uppercase">Retry</button>
+            <button onClick={() => { setLoading(true); setError(''); const activeCategory = categories.find((c) => c.label === category)?.value ?? 'All'; getProducts({ category: activeCategory === 'All' ? undefined : activeCategory }).then(setProducts).catch(() => setError('Failed to load finds. Please try again.')).finally(() => setLoading(false)); }} className="clay-button text-xs tracking-widest uppercase">Retry</button>
           </div>
         ) : loading ? (
           <div className="text-center py-16">

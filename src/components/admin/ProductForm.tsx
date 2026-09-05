@@ -2,9 +2,15 @@ import { useState } from 'react';
 import { X, Image, Link as LinkIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
-const categories = ['Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
+const categories = [
+  { label: 'Clothes', value: 'Clothing' },
+  { label: 'Shoes', value: 'Shoes' },
+  { label: 'Bags', value: 'Bags' },
+  { label: 'Beauty', value: 'Beauty' },
+  { label: 'Scarves', value: 'Scarves' },
+];
 const sources = ['AWIN', 'Impact', 'Mavrly', 'Daraz'];
-const tagOptions = ['#CoquetteCore', '#SoftGlamour', '#Y2KVibes', '#CleanGirl', '#Cottagecore', '#OldMoney', '#ModestChic', '#Balletcore', '#Barbiecore', '#HijabFashion', '#DarkAcademia'];
+const tagOptions = ['#CoquetteCore', '#Y2KVibes', '#CleanGirl', '#OldMoney'];
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -136,7 +142,7 @@ export default function ProductFormModal({ editing, form, setForm, onClose, onSa
             <div>
               <label htmlFor="product-category" className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-1">Category</label>
               <select id="product-category" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/60 border border-blush-100/50 text-sm font-body focus:outline-none focus:border-blush-200/70">
-                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                {categories.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
             </div>
           </div>

@@ -5,6 +5,15 @@ import { Product, getProducts } from '../lib/supabase';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
 import { useSavedItems } from '../hooks/useSavedItems';
 
+const CATEGORY_FILTERS = [
+  { label: 'All', value: 'All' },
+  { label: 'Clothes', value: 'Clothing' },
+  { label: 'Shoes', value: 'Shoes' },
+  { label: 'Bags', value: 'Bags' },
+  { label: 'Beauty', value: 'Beauty' },
+  { label: 'Scarves', value: 'Scarves' },
+];
+
 function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isSaved: boolean; onToggleSave: (id: string) => void }) {
   const [bouncing, setBouncing] = useState(false);
 
@@ -86,10 +95,9 @@ export default function MasonryGrid() {
   const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
-    getProducts({ category: category === 'All' ? undefined : category, limit: 24 }).then(setProducts).catch(() => console.error('Failed to fetch curated products'));
+    const active = CATEGORY_FILTERS.find((c) => c.label === category)?.value ?? 'All';
+    getProducts({ category: active === 'All' ? undefined : active, limit: 24 }).then(setProducts).catch(() => console.error('Failed to fetch curated products'));
   }, [category]);
-
-  const categories = ['All', 'Clothing', 'Shoes', 'Bags', 'Jewelry', 'Accessories', 'Beauty', 'Nails', 'Swimwear', 'Abayas', 'Scarves'];
 
   return (
     <section className="py-20 sm:py-28 relative bg-white" id="collections">
@@ -113,15 +121,15 @@ export default function MasonryGrid() {
 
         {/* Filter pills */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-          {categories.map((cat) => (
+          {CATEGORY_FILTERS.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setCategory(cat)}
+              key={cat.value}
+              onClick={() => setCategory(cat.label)}
               className={`clay-button-outline !py-2 !px-5 !text-xs font-body ${
-                category === cat ? 'bg-charcoal/10 border-charcoal text-charcoal' : ''
+                category === cat.label ? 'bg-charcoal/10 border-charcoal text-charcoal' : ''
               }`}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>

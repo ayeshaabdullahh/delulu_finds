@@ -4,25 +4,15 @@ import { Instagram, Heart } from 'lucide-react';
 const footerLinks = {
   Browse: [
     { label: 'Trending Finds', to: '/explore' },
-    { label: 'New Arrivals', to: '/explore?filter=new' },
-    { label: 'Under $10', to: '/explore?filter=under10' },
-    { label: 'Sale Alerts', to: '/explore?filter=sale' },
-    { label: 'All Categories', to: '/explore' },
   ],
   Categories: [
-    { label: 'Clothing', to: '/explore?category=Clothing' },
+    { label: 'Clothes', to: '/explore?category=Clothing' },
     { label: 'Shoes', to: '/explore?category=Shoes' },
     { label: 'Bags', to: '/explore?category=Bags' },
-    { label: 'Jewelry', to: '/explore?category=Jewelry' },
-    { label: 'Accessories', to: '/explore?category=Accessories' },
     { label: 'Beauty', to: '/explore?category=Beauty' },
-    { label: 'Nails', to: '/explore?category=Nails' },
-    { label: 'Swimwear', to: '/explore?category=Swimwear' },
-    { label: 'Abayas', to: '/explore?category=Abayas' },
     { label: 'Scarves', to: '/explore?category=Scarves' },
   ],
   About: [
-    { label: 'How It Works', to: '/#lookbook' },
     { label: 'Our Story', to: '/about' },
     { label: 'Affiliate Disclosure', to: '/disclosure' },
     { label: 'Privacy Policy', to: '/privacy' },
@@ -42,11 +32,10 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-1 mb-4">
+            <Link to="/" className="inline-block mb-4">
               <span className="font-display text-2xl font-bold tracking-wide text-white">
-                DELULU FINDS
+                DELULU FINDS<span className="text-mauve">.me</span>
               </span>
-              <span className="font-display text-2xl font-bold text-mauve">.me</span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mb-6 font-body">
               Your daily dose of curated fashion finds from across the internet.
