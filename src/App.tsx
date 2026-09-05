@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
+import ScrollToTop from './components/ScrollToTop';
 import { SavedItemsProvider } from './context/SavedItemsContext';
 import { useCanonical } from './hooks/useCanonical';
 import HomePage from './pages/HomePage';
@@ -58,6 +59,7 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <ErrorBoundary>
         <SavedItemsProvider>
           <a
