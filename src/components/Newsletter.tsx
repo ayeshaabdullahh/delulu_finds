@@ -1,24 +1,25 @@
-import { useState } from 'react';
-import { Send, Sparkles } from 'lucide-react';
-import { subscribeNewsletter } from '../lib/supabase';
+import { useEffect, useRef } from 'react';
+import { Sparkles } from 'lucide-react';
+
+const MAILBLUSTER_FORM_ID = '2f1d30c7-c9c8-4d43-aade-f1d10c167248';
 
 export default function Newsletter() {
-  const [email, setEmail] = useState('');
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    const target = e.target as HTMLFormElement;
-    const emailInput = target.elements.namedItem('email_address') as HTMLInputElement | null;
-    const emailValue = emailInput?.value ?? email;
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-    // Save a local copy to Supabase (fire-and-forget; never blocks the Kit submit)
-    if (emailValue) {
-      subscribeNewsletter(emailValue).catch(() => {});
-    }
+    const script = document.createElement('script');
+    script.src = `https://api.mailbluster.com/v1/forms/${MAILBLUSTER_FORM_ID}.js`;
+    script.dataset.form = MAILBLUSTER_FORM_ID;
+    script.async = true;
+    container.appendChild(script);
 
-    // Let the browser natively submit to ConvertKit so the email is captured there too.
-    // No preventDefault / no await — this guarantees the email reaches Kit.
-    return true;
-  };
+    return () => {
+      container.innerHTML = '';
+    };
+  }, []);
 
   return (
     <section id="newsletter" className="py-20 sm:py-28 relative overflow-hidden bg-white">
@@ -44,29 +45,7 @@ export default function Newsletter() {
               Get the best curated finds and sale alerts delivered straight to your inbox. No spam, just the good stuff.
             </p>
 
-            <form
-              onSubmit={handleSubmit}
-              action="https://app.convertkit.com/forms/3125/subscriptions"
-              method="POST"
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-              noValidate
-            >
-              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-              <input
-                id="newsletter-email"
-                name="email_address"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="flex-1 px-5 py-3 rounded-full bg-white/80 border border-charcoal/10 text-sm text-charcoal placeholder:text-muted focus:outline-none focus:border-mauve/50 focus:ring-2 focus:ring-mauve/20 transition-all"
-                required
-              />
-              <button type="submit" className="clay-button !px-6 flex items-center justify-center gap-2">
-                <Send size={14} />
-                <span className="text-xs tracking-wider uppercase">Subscribe</span>
-              </button>
-            </form>
+            <div ref={containerRef} className="flex justify-center mb-8" />
 
             <p className="text-muted text-[11px] mt-4 tracking-wide font-body">
               We only send the best finds. Unsubscribe anytime.
