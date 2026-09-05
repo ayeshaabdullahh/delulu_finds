@@ -49,7 +49,10 @@ export default function Newsletter() {
               Get the best curated finds and sale alerts delivered straight to your inbox. No spam, just the good stuff.
             </p>
 
-            <div ref={containerRef} className="flex justify-center w-full mb-8" />
+            <div
+              ref={containerRef}
+              className="w-full max-w-md mx-auto min-h-[220px] mb-8 text-left [&_form]:!w-full [&_form]:!max-w-full [&_div]:!w-full [&_iframe]:!w-full"
+            />
 
             <p className="text-muted text-[11px] mt-4 tracking-wide font-body">
               We only send the best finds. Unsubscribe anytime.
