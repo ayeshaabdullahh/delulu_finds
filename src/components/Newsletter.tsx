@@ -1,25 +1,46 @@
-import { useEffect, useRef } from 'react';
-import { Sparkles } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
+import { Send, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
 
-const MAILBLUSTER_FORM_ID = '2f1d30c7-c9c8-4d43-aade-f1d10c167248';
+const MAILBLUSTER_ENDPOINT = 'https://api.mailbluster.com/v1/forms/2f1d30c7-c9c8-4d43-aade-f1d10c167248';
 
 export default function Newsletter() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email || !consent) return;
 
-    const script = document.createElement('script');
-    script.src = `https://api.mailbluster.com/v1/forms/${MAILBLUSTER_FORM_ID}.js`;
-    script.dataset.form = MAILBLUSTER_FORM_ID;
-    script.async = true;
-    container.appendChild(script);
+    setStatus('loading');
+    setErrorMsg('');
 
-    return () => {
-      container.innerHTML = '';
-    };
-  }, []);
+    try {
+      const res = await fetch(MAILBLUSTER_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, consent: 'yes' }),
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        setEmail('');
+        setConsent(false);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setStatus('error');
+        setErrorMsg(
+          typeof data?.message === 'string'
+            ? data.message
+            : 'Something went wrong. Please try again.',
+        );
+      }
+    } catch {
+      setStatus('error');
+      setErrorMsg('Network error. Please try again.');
+    }
+  };
 
   return (
     <section id="newsletter" className="py-20 sm:py-28 relative overflow-hidden bg-white">
@@ -45,9 +66,65 @@ export default function Newsletter() {
               Get the best curated finds and sale alerts delivered straight to your inbox. No spam, just the good stuff.
             </p>
 
-            <div ref={containerRef} className="flex justify-center mb-8" />
+            {status === 'success' ? (
+              <div className="max-w-md mx-auto flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2 text-green-600 font-body text-sm font-semibold">
+                  <CheckCircle2 size={18} />
+                  <span>Thanks for subscribing!</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setStatus('idle')}
+                  className="text-mauve text-xs font-body underline underline-offset-2"
+                >
+                  Subscribe another email
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 max-w-md mx-auto" noValidate>
+                <label htmlFor="newsletter-email" className="sr-only">Email address</label>
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full px-5 py-3 rounded-full bg-white/80 border border-charcoal/10 text-sm text-charcoal placeholder:text-muted focus:outline-none focus:border-mauve/50 focus:ring-2 focus:ring-mauve/20 transition-all"
+                  required
+                />
 
-            <p className="text-muted text-[11px] mt-4 tracking-wide font-body">
+                <label className="flex items-start gap-2 text-left font-body text-xs text-muted cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    className="mt-0.5 accent-mauve"
+                    required
+                  />
+                  <span>I consent to receive your newsletter &amp; marketing emails.</span>
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="clay-button !px-6 flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  <Send size={14} />
+                  <span className="text-xs tracking-wider uppercase">
+                    {status === 'loading' ? 'Subscribing…' : 'Subscribe'}
+                  </span>
+                </button>
+
+                {status === 'error' && (
+                  <p className="flex items-center gap-1.5 text-red-400 text-xs font-body">
+                    <AlertCircle size={14} />
+                    {errorMsg}
+                  </p>
+                )}
+              </form>
+            )}
+
+            <p className="text-muted text-[11px] mt-6 tracking-wide font-body">
               We only send the best finds. Unsubscribe anytime.
             </p>
           </div>
