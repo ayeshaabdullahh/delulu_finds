@@ -12,7 +12,6 @@ export type Product = {
   description: string;
   image_url: string;
   affiliate_url: string;
-  price: string;
   original_price: string | null;
   source: string;
   category: string;

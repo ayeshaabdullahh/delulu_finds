@@ -93,7 +93,7 @@ export default function ProductPage() {
     url: `https://delulufinds.me/product/${product.slug}`,
     offers: {
       '@type': 'Offer',
-            price: (product.price || '0').replace(/[^0-9.]/g, ''),
+            price: (product.original_price || '0').replace(/[^0-9.]/g, ''),
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
     },
