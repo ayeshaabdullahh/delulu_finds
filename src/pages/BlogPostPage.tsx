@@ -22,6 +22,9 @@ export default function BlogPostPage() {
     getPostBySlug(slug)
       .then(async (p) => {
         setPost(p);
+        if (p) {
+          document.title = `${p.title} | Delulu Finds`;
+        }
         if (p?.relatedProductSlugs?.length) {
           try {
             const products = await getProductsBySlugs(p.relatedProductSlugs);
@@ -34,6 +37,9 @@ export default function BlogPostPage() {
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
+    return () => {
+      document.title = 'Delulu Finds | Gen Z Fashion Affiliate | @TheDeluluDrip';
+    };
   }, [slug]);
 
   if (loading) {

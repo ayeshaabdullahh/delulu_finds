@@ -4,15 +4,8 @@ import { ExternalLink, SlidersHorizontal } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { parsePrice } from '../lib/format';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
+import { CATEGORIES } from '../lib/categories';
 
-const categories = [
-  { label: 'All', value: 'All' },
-  { label: 'Clothes', value: 'Clothing' },
-  { label: 'Shoes', value: 'Shoes' },
-  { label: 'Bags', value: 'Bags' },
-  { label: 'Beauty', value: 'Beauty' },
-  { label: 'Scarves', value: 'Scarves' },
-];
 const vibes = [
   { label: 'All', value: 'All' },
   { label: 'Coquette', value: '#CoquetteCore' },
@@ -28,7 +21,7 @@ export default function ExplorePage() {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<string>(() => {
     const urlCat = searchParams.get('category');
-    return categories.find((c) => c.value === urlCat)?.label ?? 'All';
+    return CATEGORIES.some((c) => c.value === urlCat) ? (urlCat ?? 'All') : 'All';
   });
   const [vibe, setVibe] = useState('All');
   const [priceRange, setPriceRange] = useState('All');
@@ -44,10 +37,14 @@ export default function ExplorePage() {
   }, [searchParams]);
 
   useEffect(() => {
+    setVisibleCount(12);
+  }, [category, vibe, priceRange]);
+
+  useEffect(() => {
     setLoading(true);
     setError('');
-    const activeCategory = categories.find((c) => c.label === category)?.value ?? category;
-    getProducts({ category: activeCategory === 'All' ? undefined : activeCategory })
+    const activeCategory = category === 'All' ? undefined : category;
+    getProducts({ category: activeCategory })
       .then((data) => {
         let filtered = data;
 
@@ -110,12 +107,12 @@ export default function ExplorePage() {
             <div>
               <label className="text-[10px] tracking-[0.2em] uppercase text-blush-300 font-bold font-body block mb-2">Category</label>
               <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
+                {CATEGORIES.map((cat) => (
                   <button
                     key={cat.value}
-                    onClick={() => setCategory(cat.label)}
+                    onClick={() => setCategory(cat.value)}
                     className={`clay-button-outline !py-1.5 !px-4 !text-[11px] font-body ${
-                      category === cat.label ? 'bg-blush-200/20 border-blush-200/70 text-blush-400' : ''
+                      category === cat.value ? 'bg-blush-200/20 border-blush-200/70 text-blush-400' : ''
                     }`}
                   >
                     {cat.label}
@@ -162,7 +159,7 @@ export default function ExplorePage() {
         {error ? (
           <div className="text-center py-16">
             <p className="text-red-400 text-sm font-body mb-4">{error}</p>
-            <button onClick={() => { setLoading(true); setError(''); const activeCategory = categories.find((c) => c.label === category)?.value ?? 'All'; getProducts({ category: activeCategory === 'All' ? undefined : activeCategory }).then(setProducts).catch(() => setError('Failed to load finds. Please try again.')).finally(() => setLoading(false)); }} className="clay-button text-xs tracking-widest uppercase">Retry</button>
+            <button onClick={() => { setLoading(true); setError(''); getProducts({ category: category === 'All' ? undefined : category }).then(setProducts).catch(() => setError('Failed to load finds. Please try again.')).finally(() => setLoading(false)); }} className="clay-button text-xs tracking-widest uppercase">Retry</button>
           </div>
         ) : loading ? (
           <div className="text-center py-16">

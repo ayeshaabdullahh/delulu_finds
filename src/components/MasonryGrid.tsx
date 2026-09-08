@@ -3,15 +3,7 @@ import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
-
-const CATEGORY_FILTERS = [
-  { label: 'All', value: 'All' },
-  { label: 'Clothes', value: 'Clothing' },
-  { label: 'Shoes', value: 'Shoes' },
-  { label: 'Bags', value: 'Bags' },
-  { label: 'Beauty', value: 'Beauty' },
-  { label: 'Scarves', value: 'Scarves' },
-];
+import { CATEGORIES } from '../lib/categories';
 
 function ProductCard({ product }: { product: Product }) {
   return (
@@ -72,8 +64,8 @@ export default function MasonryGrid() {
   const [category, setCategory] = useState('All');
 
   useEffect(() => {
-    const active = CATEGORY_FILTERS.find((c) => c.label === category)?.value ?? 'All';
-    getProducts({ category: active === 'All' ? undefined : active, limit: 24 }).then(setProducts).catch(() => console.error('Failed to fetch curated products'));
+    const active = category === 'All' ? undefined : category;
+    getProducts({ category: active, limit: 24 }).then(setProducts).catch(() => console.error('Failed to fetch curated products'));
   }, [category]);
 
   return (
@@ -98,12 +90,12 @@ export default function MasonryGrid() {
 
         {/* Filter pills */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-          {CATEGORY_FILTERS.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <button
               key={cat.value}
-              onClick={() => setCategory(cat.label)}
+              onClick={() => setCategory(cat.value)}
               className={`clay-button-outline !py-2 !px-5 !text-xs font-body ${
-                category === cat.label ? 'bg-charcoal/10 border-charcoal text-charcoal' : ''
+                category === cat.value ? 'bg-charcoal/10 border-charcoal text-charcoal' : ''
               }`}
             >
               {cat.label}

@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Instagram, Heart, Youtube, Facebook } from 'lucide-react';
+import { NAV_CATEGORIES } from '../lib/categories';
 
 const footerLinks = {
   Browse: [
     { label: 'Trending Finds', to: '/explore' },
   ],
-  Categories: [
-    { label: 'Clothes', to: '/explore?category=Clothing' },
-    { label: 'Shoes', to: '/explore?category=Shoes' },
-    { label: 'Bags', to: '/explore?category=Bags' },
-    { label: 'Beauty', to: '/explore?category=Beauty' },
-    { label: 'Scarves', to: '/explore?category=Scarves' },
-  ],
+  Categories: NAV_CATEGORIES.map((cat) => ({
+    label: cat.label,
+    to: `/explore?category=${encodeURIComponent(cat.value)}`,
+  })),
   About: [
     { label: 'Our Story', to: '/about' },
     { label: 'Affiliate Disclosure', to: '/disclosure' },

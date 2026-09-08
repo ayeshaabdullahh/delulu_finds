@@ -14,6 +14,7 @@ type Tab = 'overview' | 'products' | 'add';
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -25,9 +26,11 @@ export default function AdminPage() {
   const [form, setForm] = useState<ProductForm>(emptyForm);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setAuthed(true);
-    });
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (session) setAuthed(true);
+      })
+      .finally(() => setChecking(false));
   }, []);
 
   const loadData = async () => {
@@ -103,16 +106,25 @@ export default function AdminPage() {
   const featuredCount = products.filter((p) => p.is_featured).length;
   const newArrivalCount = products.filter((p) => p.is_new_arrival).length;
 
+  if (checking) {
+    return (
+      <div className="pt-24 min-h-screen flex items-center justify-center" style={{ background: '#FFF8F5' }}>
+        <div className="w-8 h-8 border-2 border-blush-200 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (!authed) {
     return (
       <div className="pt-24 min-h-screen flex items-center justify-center" style={{ background: '#FFF8F5' }}>
         <div className="glass-card rounded-3xl p-8 w-full max-w-sm mx-4">
-          <div className="text-center mb-6">
+          <div className="text-center mb-5">
             <div className="w-14 h-14 rounded-full bg-blush-100/60 flex items-center justify-center mx-auto mb-4">
               <LayoutDashboard size={24} className="text-blush-300" />
             </div>
-            <h1 className="font-display text-2xl font-semibold text-charcoal">Admin Dashboard</h1>
-            <p className="text-gray-400 text-xs font-body mt-1">Delulu Finds Management</p>
+            <span className="text-[10px] tracking-[0.3em] uppercase text-blush-300 font-bold font-body">Restricted</span>
+            <h1 className="font-display text-2xl font-semibold text-charcoal mt-2">Admin Sign In</h1>
+            <p className="text-gray-400 text-xs font-body mt-1">This area is for Delulu Finds admins only.</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>

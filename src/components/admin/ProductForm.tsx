@@ -1,14 +1,8 @@
 import { useState } from 'react';
 import { X, Image, Link as LinkIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { NAV_CATEGORIES as categories } from '../../lib/categories';
 
-const categories = [
-  { label: 'Clothes', value: 'Clothing' },
-  { label: 'Shoes', value: 'Shoes' },
-  { label: 'Bags', value: 'Bags' },
-  { label: 'Beauty', value: 'Beauty' },
-  { label: 'Scarves', value: 'Scarves' },
-];
 const sources = ['AWIN', 'Impact', 'Mavrly', 'Daraz'];
 const tagOptions = ['#CoquetteCore', '#Y2KVibes', '#CleanGirl', '#OldMoney'];
 

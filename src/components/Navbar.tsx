@@ -1,14 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, ChevronDown } from 'lucide-react';
-
-const categories = [
-  { label: 'Clothes', value: 'Clothing' },
-  { label: 'Shoes', value: 'Shoes' },
-  { label: 'Bags', value: 'Bags' },
-  { label: 'Beauty', value: 'Beauty' },
-  { label: 'Scarves', value: 'Scarves' },
-];
+import { NAV_CATEGORIES as categories } from '../lib/categories';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
