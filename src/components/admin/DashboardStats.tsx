@@ -1,4 +1,4 @@
-import { Package, Heart, Tag, TrendingUp, Sparkles, Layers } from 'lucide-react';
+import { Package, Tag, TrendingUp, Sparkles, Layers } from 'lucide-react';
 
 interface StatCardProps {
   icon: React.ElementType;
@@ -35,18 +35,16 @@ interface DashboardStatsProps {
   totalProducts: number;
   totalCategories: number;
   totalSources: number;
-  totalSaved: number;
   featuredCount: number;
   newArrivalCount: number;
 }
 
-export default function DashboardStats({ totalProducts, totalCategories, totalSources, totalSaved, featuredCount, newArrivalCount }: DashboardStatsProps) {
+export default function DashboardStats({ totalProducts, totalCategories, totalSources, featuredCount, newArrivalCount }: DashboardStatsProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       <StatCard icon={Package} label="Total Finds" value={totalProducts} color="blush" />
       <StatCard icon={Layers} label="Categories" value={totalCategories} color="lavender" />
       <StatCard icon={Tag} label="Sources" value={totalSources} color="peach" />
-      <StatCard icon={Heart} label="Total Saved" value={totalSaved} subtext="by all users" color="blush" />
       <StatCard icon={Sparkles} label="Featured" value={featuredCount} color="lavender" />
       <StatCard icon={TrendingUp} label="New Arrivals" value={newArrivalCount} color="peach" />
     </div>

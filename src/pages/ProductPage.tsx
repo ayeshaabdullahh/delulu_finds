@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, Heart, ChevronRight, ArrowRight } from 'lucide-react';
+import { ExternalLink, ChevronRight, ArrowRight } from 'lucide-react';
 import { Product, getProductBySlug, getRelatedProducts } from '../lib/supabase';
 import { sourceBadgeClass } from '../lib/sources';
-import { useSavedItems } from '../hooks/useSavedItems';
 import { getPostByProductSlug, getPostSlug, urlFor, BlogPost } from '../lib/sanity';
 import ExpandableDescription from '../components/ExpandableDescription';
 
@@ -14,7 +13,6 @@ export default function ProductPage() {
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
     if (!slug) return;
@@ -81,8 +79,6 @@ export default function ProductPage() {
       </div>
     );
   }
-
-  const isSaved = savedIds.has(product.id);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -167,15 +163,6 @@ export default function ProductPage() {
                 <ExternalLink size={16} />
                 Shop This Look
               </a>
-              <button
-                onClick={() => toggleSave(product.id)}
-                className={`clay-button-outline tracking-widest uppercase text-xs flex items-center justify-center gap-2 ${
-                  isSaved ? 'bg-blush-200/20 border-blush-200/70 text-blush-400' : ''
-                }`}
-              >
-                <Heart size={16} className={isSaved ? 'fill-blush-400' : ''} fill={isSaved ? 'currentColor' : 'none'} />
-                {isSaved ? 'Saved' : 'Save Find'}
-              </button>
             </div>
 
             <a

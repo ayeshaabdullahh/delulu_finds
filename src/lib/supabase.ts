@@ -12,6 +12,7 @@ export type Product = {
   description: string;
   image_url: string;
   affiliate_url: string;
+  price: string | null;
   original_price: string | null;
   source: string;
   category: string;
@@ -22,33 +23,6 @@ export type Product = {
   created_at: string;
   updated_at: string;
 };
-
-export type SavedItem = {
-  id: string;
-  user_session: string;
-  product_id: string;
-  created_at: string;
-  product?: Product;
-};
-
-const SESSION_KEY = 'delulu_session_id';
-let sessionInitialized = false;
-
-export function getSessionId(): string {
-  let id = localStorage.getItem(SESSION_KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(SESSION_KEY, id);
-  }
-  return id;
-}
-
-async function ensureSession(): Promise<void> {
-  if (sessionInitialized) return;
-  const sessionId = getSessionId();
-  const { error } = await supabase.rpc('set_user_session', { session_id: sessionId });
-  if (!error) sessionInitialized = true;
-}
 
 export async function getProducts(options?: {
   category?: string;
@@ -82,7 +56,12 @@ export async function getProducts(options?: {
     query = query.eq('is_new_arrival', true);
   }
   if (options?.search) {
-    const safeSearch = options.search.replace(/[%_]/g, '\\$&');
+    // Escape in order: backslash first (it's PostgREST's escape char), then
+    // ILIKE wildcards (%, _) and PostgREST or() syntax chars (commas, parens,
+    // and dots) so user input can't break out of the filter clause.
+    const safeSearch = options.search
+      .replace(/\\/g, '\\\\')
+      .replace(/[%_,().]/g, '\\$&');
     query = query.or(`name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,category.ilike.%${safeSearch}%`);
   }
   if (options?.limit) {
@@ -125,49 +104,6 @@ export async function getRelatedProducts(productId: string, category: string): P
     .neq('id', productId);
   if (error) throw error;
   return (data || []) as Product[];
-}
-
-export async function saveProduct(productId: string): Promise<boolean> {
-  await ensureSession();
-  const sessionId = getSessionId();
-  const { error } = await supabase
-    .from('saved_items')
-    .insert({ user_session: sessionId, product_id: productId });
-  return !error;
-}
-
-export async function unsaveProduct(productId: string): Promise<boolean> {
-  await ensureSession();
-  const sessionId = getSessionId();
-  const { error } = await supabase
-    .from('saved_items')
-    .delete()
-    .eq('user_session', sessionId)
-    .eq('product_id', productId);
-  return !error;
-}
-
-export async function getSavedProductIds(): Promise<string[]> {
-  await ensureSession();
-  const sessionId = getSessionId();
-  const { data, error } = await supabase
-    .from('saved_items')
-    .select('product_id')
-    .eq('user_session', sessionId);
-  if (error) return [];
-  return (data || []).map((d) => d.product_id);
-}
-
-export async function getSavedProducts(): Promise<(SavedItem & { product: Product })[]> {
-  await ensureSession();
-  const sessionId = getSessionId();
-  const { data, error } = await supabase
-    .from('saved_items')
-    .select('*, product:products(*)')
-    .eq('user_session', sessionId)
-    .order('created_at', { ascending: false });
-  if (error) return [];
-  return (data || []) as (SavedItem & { product: Product })[];
 }
 
 export async function subscribeNewsletter(email: string): Promise<boolean> {

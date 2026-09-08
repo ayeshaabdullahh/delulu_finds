@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
-import { useSavedItems } from '../hooks/useSavedItems';
 
 const CATEGORY_FILTERS = [
   { label: 'All', value: 'All' },
@@ -14,17 +13,7 @@ const CATEGORY_FILTERS = [
   { label: 'Scarves', value: 'Scarves' },
 ];
 
-function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isSaved: boolean; onToggleSave: (id: string) => void }) {
-  const [bouncing, setBouncing] = useState(false);
-
-  const handleHeart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onToggleSave(product.id);
-    setBouncing(true);
-    setTimeout(() => setBouncing(false), 400);
-  };
-
+function ProductCard({ product }: { product: Product }) {
   return (
     <div className="glass-card glass-card-hover rounded-2xl overflow-hidden group">
       <div className="relative h-72 sm:h-80 overflow-hidden">
@@ -49,17 +38,6 @@ function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isS
             {product.aesthetic_tags[0]}
           </span>
         )}
-
-        {/* Heart */}
-        <button
-          onClick={handleHeart}
-          className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 ${
-            bouncing ? 'animate-heart-bounce' : ''
-          }`}
-          aria-label={isSaved ? 'Unsave' : 'Save'}
-        >
-          <Heart size={14} className={isSaved ? 'text-mauve fill-mauve' : 'text-mauve'} fill={isSaved ? 'currentColor' : 'none'} />
-        </button>
 
         {/* Category pill */}
         <div className="absolute bottom-3 left-3 flex items-center gap-2">
@@ -92,7 +70,6 @@ function ProductCard({ product, isSaved, onToggleSave }: { product: Product; isS
 export default function MasonryGrid() {
   const [products, setProducts] = useState<Product[]>([]);
   const [category, setCategory] = useState('All');
-  const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
     const active = CATEGORY_FILTERS.find((c) => c.label === category)?.value ?? 'All';
@@ -140,8 +117,6 @@ export default function MasonryGrid() {
             <ProductCard
               key={product.id}
               product={product}
-              isSaved={savedIds.has(product.id)}
-              onToggleSave={toggleSave}
             />
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { Plus, BarChart3, Globe, Image } from 'lucide-react';
+import { Plus, BarChart3, Globe } from 'lucide-react';
 
 interface QuickActionsProps {
   onAddProduct: () => void;
@@ -9,7 +9,6 @@ export default function QuickActions({ onAddProduct }: QuickActionsProps) {
     { icon: Plus, label: 'Add New Find', desc: 'Add a product manually', onClick: onAddProduct, color: 'bg-blush-100/60 text-blush-400' },
     { icon: Globe, label: 'View Site', desc: 'Open your live site', href: '/', color: 'bg-lavender-100/60 text-lavender-400' },
     { icon: BarChart3, label: 'Explore Page', desc: 'See customer view', href: '/explore', color: 'bg-peach-100/60 text-peach-400' },
-    { icon: Image, label: 'Saved Finds', desc: 'View saved collection', href: '/saved', color: 'bg-blush-100/60 text-blush-400' },
   ];
 
   return (

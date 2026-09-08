@@ -4,14 +4,12 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import ScrollToTop from './components/ScrollToTop';
-import { SavedItemsProvider } from './context/SavedItemsContext';
 import { useCanonical } from './hooks/useCanonical';
 import HomePage from './pages/HomePage';
 import ExplorePage from './pages/ExplorePage';
 import ProductPage from './pages/ProductPage';
 
 const SearchPage = lazy(() => import('./pages/SearchPage'));
-const SavedPage = lazy(() => import('./pages/SavedPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
@@ -43,7 +41,6 @@ function AppRoutes() {
       <Route path="/product/:slug" element={<ProductPage />} />
       <Route path="/products/:slug" element={<RedirectToProduct />} />
       <Route path="/search" element={<Suspense fallback={<RouteFallback />}><SearchPage /></Suspense>} />
-      <Route path="/saved" element={<Suspense fallback={<RouteFallback />}><SavedPage /></Suspense>} />
       <Route path="/admin" element={<Suspense fallback={<RouteFallback />}><AdminPage /></Suspense>} />
       <Route path="/blog" element={<Suspense fallback={<RouteFallback />}><BlogPage /></Suspense>} />
       <Route path="/blog/:slug" element={<Suspense fallback={<RouteFallback />}><BlogPostPage /></Suspense>} />
@@ -61,21 +58,19 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <ErrorBoundary>
-        <SavedItemsProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-mauve focus:text-white focus:rounded-full focus:text-sm font-body"
-          >
-            Skip to main content
-          </a>
-          <main id="main">
-            <div className="min-h-screen bg-cream-100">
-              <Navbar />
-              <AppRoutes />
-              <Footer />
-            </div>
-          </main>
-        </SavedItemsProvider>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-mauve focus:text-white focus:rounded-full focus:text-sm font-body"
+        >
+          Skip to main content
+        </a>
+        <main id="main">
+          <div className="min-h-screen bg-cream-100">
+            <Navbar />
+            <AppRoutes />
+            <Footer />
+          </div>
+        </main>
       </ErrorBoundary>
     </BrowserRouter>
   );

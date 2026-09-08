@@ -7,7 +7,6 @@ const STATIC_PAGES = [
   { loc: '/explore', priority: '0.9' },
   { loc: '/blog', priority: '0.9' },
   { loc: '/search', priority: '0.6' },
-  { loc: '/saved', priority: '0.4' },
   { loc: '/about', priority: '0.5' },
   { loc: '/disclosure', priority: '0.3' },
   { loc: '/privacy', priority: '0.3' },

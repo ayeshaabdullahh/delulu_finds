@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, Heart, ChevronDown } from 'lucide-react';
+import { Search, Menu, X, ChevronDown } from 'lucide-react';
 
 const categories = [
   { label: 'Clothes', value: 'Clothing' },
@@ -152,10 +152,6 @@ export default function Navbar() {
               >
                 <Search size={20} className="text-white/70" />
               </button>
-
-              <Link to="/saved" className="p-2 rounded-full hover:bg-white/10 transition-colors relative" aria-label="Saved finds">
-                <Heart size={20} className="text-white/70 hover:text-mauve transition-colors" />
-              </Link>
             </div>
           </div>
         </div>
@@ -235,10 +231,6 @@ export default function Navbar() {
           <Link to="/explore" className="flex flex-col items-center gap-1 text-white/50 hover:text-mauve transition-colors">
             <Search size={20} />
             <span className="text-[10px] font-bold tracking-wide">Explore</span>
-          </Link>
-          <Link to="/saved" className="flex flex-col items-center gap-1 text-white/50 hover:text-mauve transition-colors">
-            <Heart size={20} />
-            <span className="text-[10px] font-bold tracking-wide">Saved</span>
           </Link>
           <a
             href="https://www.pinterest.com/TheDeluluDrip"

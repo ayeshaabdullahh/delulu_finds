@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ExternalLink, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
-import { useSavedItems } from '../hooks/useSavedItems';
 
 export default function NewArrivals() {
   const [products, setProducts] = useState<Product[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
     getProducts({ newArrival: true, limit: 12 }).then(setProducts).catch(() => console.error('Failed to load new arrivals'));
@@ -70,13 +68,6 @@ export default function NewArrivals() {
                 <span className={`absolute top-2 left-2 source-badge ${sourceBadgeClass(product.source)}`}>
                   {sourceLabel(product.source)}
                 </span>
-                <button
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(product.id); }}
-                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-0 group-hover:opacity-100"
-                  aria-label={savedIds.has(product.id) ? 'Unsave' : 'Save'}
-                >
-                  <Heart size={12} className={savedIds.has(product.id) ? 'text-mauve fill-mauve' : 'text-mauve'} fill={savedIds.has(product.id) ? 'currentColor' : 'none'} />
-                </button>
               </div>
               <div className="p-3">
                 <Link to={`/product/${product.slug}`} className="font-display text-xs font-medium text-charcoal hover:text-mauve transition-colors line-clamp-1 block">

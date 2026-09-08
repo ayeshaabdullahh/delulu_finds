@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Heart, ExternalLink, SlidersHorizontal } from 'lucide-react';
+import { ExternalLink, SlidersHorizontal } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { parsePrice } from '../lib/format';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
-import { useSavedItems } from '../hooks/useSavedItems';
 
 const categories = [
   { label: 'All', value: 'All' },
@@ -36,7 +35,6 @@ export default function ExplorePage() {
   const [showFilters, setShowFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
   const [error, setError] = useState('');
-  const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
     const filter = searchParams.get('filter');
@@ -75,10 +73,6 @@ export default function ExplorePage() {
       .catch(() => setError('Failed to load finds. Please try again.'))
       .finally(() => setLoading(false));
   }, [category, vibe, priceRange, searchParams]);
-
-  const handleToggleSave = async (productId: string) => {
-    await toggleSave(productId);
-  };
 
   const visibleProducts = products.slice(0, visibleCount);
 
@@ -191,13 +185,6 @@ export default function ExplorePage() {
                         {product.aesthetic_tags[0]}
                       </span>
                     )}
-                    <button
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleToggleSave(product.id); }}
-                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
-                      aria-label={savedIds.has(product.id) ? 'Unsave' : 'Save'}
-                    >
-                      <Heart size={14} className={savedIds.has(product.id) ? 'text-blush-400 fill-blush-400' : 'text-blush-400'} fill={savedIds.has(product.id) ? 'currentColor' : 'none'} />
-                    </button>
                     <div className="absolute bottom-3 left-3">
                       <span className="text-[10px] tracking-wider uppercase font-bold bg-white/70 backdrop-blur-sm text-gray-600 rounded-full px-3 py-1 font-body">{product.category}</span>
                     </div>

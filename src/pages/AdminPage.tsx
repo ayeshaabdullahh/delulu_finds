@@ -19,7 +19,6 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('');
   const [logging, setLogging] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-  const [totalSaved, setTotalSaved] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
@@ -35,8 +34,6 @@ export default function AdminPage() {
     try {
       const data = await getProducts({});
       setProducts(data);
-      const { count } = await supabase.from('saved_items').select('*', { count: 'exact', head: true });
-      setTotalSaved(count || 0);
     } catch {
       console.error('Failed to load admin data');
     }
@@ -77,7 +74,7 @@ export default function AdminPage() {
   const openEdit = (p: Product) => {
     setForm({
       name: p.name, slug: p.slug, description: p.description, image_url: p.image_url,
-      affiliate_url: p.affiliate_url, price: p.price, original_price: p.original_price || '',
+      affiliate_url: p.affiliate_url, price: p.price || '', original_price: p.original_price || '',
       source: p.source, category: p.category, aesthetic_tags: p.aesthetic_tags || [],
       is_featured: p.is_featured, is_new_arrival: p.is_new_arrival,
     });
@@ -206,7 +203,6 @@ export default function AdminPage() {
               totalProducts={products.length}
               totalCategories={categories.length}
               totalSources={sources.length}
-              totalSaved={totalSaved}
               featuredCount={featuredCount}
               newArrivalCount={newArrivalCount}
             />

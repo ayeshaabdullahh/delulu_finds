@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Heart, ExternalLink, Search } from 'lucide-react';
+import { ExternalLink, Search } from 'lucide-react';
 import { Product, getProducts } from '../lib/supabase';
 import { sourceBadgeClass, sourceLabel } from '../lib/sources';
-import { useSavedItems } from '../hooks/useSavedItems';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -11,7 +10,6 @@ export default function SearchPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { savedIds, toggleSave } = useSavedItems();
 
   useEffect(() => {
     if (!query) { setProducts([]); return; }
@@ -62,13 +60,6 @@ export default function SearchPage() {
                   </Link>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <span className={`absolute top-3 left-3 source-badge ${sourceBadgeClass(product.source)}`}>{sourceLabel(product.source)}</span>
-                  <button
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSave(product.id); }}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all shadow-sm opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
-                    aria-label={savedIds.has(product.id) ? 'Unsave' : 'Save'}
-                  >
-                    <Heart size={14} className={savedIds.has(product.id) ? 'text-blush-400 fill-blush-400' : 'text-blush-400'} fill={savedIds.has(product.id) ? 'currentColor' : 'none'} />
-                  </button>
                 </div>
                 <div className="p-4">
                   <Link to={`/product/${product.slug}`} className="font-display text-sm font-medium text-charcoal hover:text-blush-400 transition-colors line-clamp-1 block">{product.name}</Link>

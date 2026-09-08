@@ -14,11 +14,6 @@ export default function PrivacyPage() {
         <div className="space-y-5 font-body text-muted leading-relaxed">
           <h2 className="font-display text-lg font-semibold text-charcoal">What we collect</h2>
           <p>
-            When you save a find, we store an anonymous session identifier in your browser's
-            local storage so we can remember your saved items between visits. This identifier
-            is not linked to your identity.
-          </p>
-          <p>
             If you subscribe to our newsletter, we store your email address for the sole purpose
             of sending you curated fashion finds and sale alerts.
           </p>
